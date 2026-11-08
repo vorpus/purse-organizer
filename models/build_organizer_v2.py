@@ -211,6 +211,8 @@ for name, direction in (("front", (0, 0, 1)), ("angle", (0.35, -0.65, 1.4))):
 
 references = bpy.data.collections.new("ITEMS - measured envelopes, hidden")
 scene.collection.children.link(references)
+envelope_color = material("Item envelopes", (.38, .58, .43))
+label_color = material("Envelope labels", (.95, .95, .95))
 for name, size, location in (
     ("Anker 622", BATTERY, (-29.5, -11.5)),
     ("Perfume", PERFUME, (-30.2, 36.65)),
@@ -219,8 +221,21 @@ for name, size, location in (
     x, y = location
     w, h, depth = size
     item = box(name, (x-w/2, y-h/2, ITEM_BACK), (x+w/2, y+h/2, ITEM_BACK+depth))
+    item.data.materials.append(envelope_color)
     item.display_type = "WIRE"
     move_to(item, references)
+    bpy.ops.object.text_add(location=(x, y, 23))
+    label = bpy.context.object
+    label.data.body = f"{name}\n{w:g} x {h:g} mm face"
+    label.data.align_x = "CENTER"
+    label.data.align_y = "CENTER"
+    label.data.size = 3.4
+    label.data.materials.append(label_color)
+    move_to(label, references)
+camera.location = (0, 0, 308)
+camera.rotation_euler = (0, 0, 0)
+scene.render.filepath = str(ROOT / "docs/organizer-v2-loaded.png")
+bpy.ops.render.render(write_still=True)
 references.hide_render = True
 references.hide_viewport = True
 for screen in bpy.data.screens:

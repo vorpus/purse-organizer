@@ -59,7 +59,11 @@ Side windows are disabled through SIDE_WINDOW_WIDTH = 0 in frame_v2.py.
 The updated exported mesh passes the same single-component, closed-mesh,
 nondegenerate-face and STL round-trip checks.
 
-The requested upright perfume requires a layout decision. Battery sideways,
-Touchland upright, and perfume upright require 185.3 mm of item width before
-walls or clearance, exceeding the frame opening. The exported model retains
-the horizontal perfume while that decision is pending.
+The user clarified the perfume orientation. Its 66.4 mm long axis stays
+horizontal, its 25.3 mm dimension runs up the organizer, and its 16.2 mm
+thickness projects forward. The broad face is parallel to the organizer back.
+This is the orientation used by the existing cradle. The earlier 185.3 mm
+packing objection concerned a different orientation and does not apply.
+
+The loaded preview shows simple item envelopes to clarify placement and face
+orientation. These references are excluded from the printable STL.

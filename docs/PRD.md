@@ -14,14 +14,15 @@ named FRAME and ORGANIZER source collections and separate geometry functions
 so future layouts can reuse the fitted frame. The user clarified that mechanical
 separation into removable modules is unnecessary.
 
-Use solid side walls for this prototype to simplify printing, with an open backing. An upright perfume layout is pending the decision below.
+Use solid side walls for this prototype to simplify printing, with an open backing.
 Minimize accessible support material and avoid trapped support.
 
 ## Item arrangement
 
 - Anker MagGo 622 sideways at lower left, measured approximately 105 × 67 × 13 mm.
 - Touchland upright at right, user measured 55 × 95 × 17 mm.
-- To Summer solid perfume requested upright, approximately
+- To Summer solid perfume horizontal above the battery, with its broad face
+  parallel to the organizer back, approximately
   66.4 × 25.3 × 16.2 mm from the aligned scan, confirmed approximately by user.
 - Perfume should sit in a smooth cradle, resist movement in the upright bag, and
   lift upward to release. Battery can tilt forward and then lift out.
@@ -33,15 +34,3 @@ Rear taper amount is still provisional. A 5 mm stand-off alone does not determin
 the contour or taper angle. V2 starts with a 2 mm inward offset at the rear,
 returning to the tested perimeter over 5 mm. Verify deeper seating, corner
 contact, closure, item clearance, and removal on the next print.
-
-## Pending upright layout
-
-The three upright/sideways envelopes currently requested require 105 + 25.3 +
-55 = 185.3 mm across before walls or clearance. The frame opening is roughly
-175.2 mm. The upright perfume also cannot stack above the 67 mm tall battery
-inside the roughly 95.2 mm opening. Their thicknesses prevent stacking in depth.
-
-The solid-wall STL currently retains the previous horizontal perfume layout.
-An upright perfume layout awaits the user's choice of changing battery
-orientation, moving perfume to the other bag half, or keeping the horizontal
-perfume for this print.
