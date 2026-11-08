@@ -63,3 +63,9 @@ parameterized, 3D-printable fit-test frame for that half only. Blender and Cura
 are installed here. Show the selected half and assess scan scale/reliability
 before choosing dimensions. Ask for physical measurements needed to validate
 fit; do not invent missing interior geometry or claim the frame is fit-verified.
+
+## Continuation
+
+The provisional frame, Blender source, and STL are in `models/`. See
+[fit-test notes](FIT-TEST.md) for scan views, the footprint estimate, and the
+measurements needed to calibrate it.
