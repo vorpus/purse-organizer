@@ -4,7 +4,9 @@
 
 The user confirmed a good fit from the shared-base V2 test print and requested
 the production model. The production direction follows the approved fitted
-pocket concept, with a central thumb scoop in the horizontal perfume cradle.
+pocket concept. Latest feedback requires two organic perfume end cradles with
+the middle completely open through the bottom, thin outer walls, a shorter
+tapered divider, and a lower Touchland lip. Keep the tested outside fit.
 See [production notes](PRODUCTION.md) and the production build commands in
 the README. The earlier sections below record the initial scan handoff.
 

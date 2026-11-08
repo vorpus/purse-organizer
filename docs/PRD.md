@@ -35,15 +35,22 @@ production version. Carry its 2 mm rear inset and 5 mm taper length into the
 production frame. Verify the revised pockets and removal paths physically
 after printing the production model.
 
-Battery and perfume share the frame backing. Battery rests on the frame bottom; perfume retains a small elevated ledge and retaining lips.
+Battery and perfume share the frame backing. Battery rests on the frame bottom;
+perfume rests in two elevated curved end cradles.
 Leave the battery's upper edge open, without a surrounding top wall, to make
-removal easier. The perfume retains only its own necessary supporting shelf.
+removal easier. The perfume retains only its own two end supports.
 
 ## Production refinement
 
 Build smooth integrated pockets based on the approved visual concept, with
 solid sides, deliberate openings in the backing, and rounded contact edges.
-Extend the central thumb carveout all the way to the perfume shelf, dividing
-the front retainer into two side sections. Keep the shelf and shared backing
-connected so this remains one printable object. Preserve the horizontal perfume
+Use two curved pill-like end cradles for the perfume. The central thumb gap
+must remove the bottom shelf as well as the front retainer, leaving no bridge
+under the middle of the perfume. Connect the two cradles through the frame
+and backing so this remains one printable object. Preserve the horizontal perfume
 orientation and its broad face parallel to the organizer back.
+
+Avoid stacked plates, thick junction fills, and redundant inner side walls.
+Use thin flowing shells, a shorter center divider, and a much lower Touchland
+front lip. Preserve the fitted outside contour while reducing unnecessary
+material on both outer sides.

@@ -84,54 +84,13 @@ def make_backing():
         cutter = extrude_xy("Leather window cutter", rounded_rectangle(*bounds), -1, 3)
         boolean(backing, cutter, "DIFFERENCE")
         bpy.data.objects.remove(cutter, do_unlink=True)
+    thumb = extrude_xy("Backing opening under perfume thumb gap",
+                       rounded_rectangle(PERFUME_CENTER_X-PERFUME_THUMB_WIDTH/2,
+                                         PERFUME_CENTER_X+PERFUME_THUMB_WIDTH/2,
+                                         20.8, 45, 3), -1, 3)
+    boolean(backing, thumb, "DIFFERENCE")
+    bpy.data.objects.remove(thumb, do_unlink=True)
     return backing
-
-
-def pocket_ring(name, inner, outer, height):
-    """A continuous rounded pocket wall with a rounded, variable-depth rim."""
-    inner_points = rounded_rectangle(*inner, steps=24)
-    outer_points = rounded_rectangle(*outer, steps=24)
-    lower_inner = [(x, y, 0) for x, y in inner_points]
-    lower_outer = [(x, y, 0) for x, y in outer_points]
-    upper_inner = [(x, y, height(y)) for x, y in inner_points]
-    upper_outer = [(x, y, height(y)) for x, y in outer_points]
-    faces = []
-    for i in range(len(inner_points)):
-        j = (i+1) % len(inner_points)
-        faces.extend(((lower_inner[i], lower_inner[j], upper_inner[j], upper_inner[i]),
-                      (lower_outer[i], lower_outer[j], upper_outer[j], upper_outer[i]),
-                      (lower_inner[i], lower_inner[j], lower_outer[j], lower_outer[i]),
-                      (upper_inner[i], upper_inner[j], upper_outer[j], upper_outer[i])))
-    obj = frame_v2.make_mesh(name, faces)
-    bpy.context.view_layer.objects.active = obj
-    bevel = obj.modifiers.new("Rounded pocket mouth", "BEVEL")
-    bevel.width = .35
-    bevel.segments = 4
-    bpy.ops.object.modifier_apply(modifier=bevel.name)
-    return obj
-
-
-def open_top_height(y, start, end, depth):
-    t = max(0, min((y-start)/(end-start), 1))
-    return (BACK_THICKNESS + .02) + (depth-BACK_THICKNESS-.02)*math.cos(t*math.pi/2)**2
-
-
-def junction_fill():
-    """Continuous outer junctions, with all three access cavities kept clear."""
-    obj = extrude_xy("Continuous sculpted pocket junctions",
-                     rounded_rectangle(-88, 88, -48, 48, 9, 32), 1.0, 19.8)
-    cavities = [(-82.6, 23.6, -47.6, 65, 4.6),
-                (-64, 3.6, 23.4, 65, .6),
-                (27.6, 83.8, -45.3, 65, 6.6),
-                (-82, -77, 26, 65, 2.4), (-73, -68, 26, 65, 2.4),
-                (10, 15, 26, 65, 2.4), (19, 24, 26, 65, 2.4)]
-    for bounds in cavities:
-        xmin, xmax, ymin, ymax, radius = bounds
-        cutter = extrude_xy("Junction cavity cutter", rounded_rectangle(
-            xmin-.02, xmax+.02, ymin-.02, ymax+.02, radius+.02, steps=24), -1, 22)
-        boolean(obj, cutter, "DIFFERENCE")
-        bpy.data.objects.remove(cutter, do_unlink=True)
-    return obj
 
 
 def scallop(x, center, width, low, high):
@@ -193,6 +152,21 @@ def front_curb(name, xmin, xmax, ymin, zmin, zmax, top_function):
 def build_frame():
     frame_v2.CORNER_STEPS = 32
     perimeter = frame_v2.perimeter()
+    # Preserve the fitted XY outline while rolling the open upper ends down
+    # to the rear rim, instead of terminating the tall side walls abruptly.
+    outline = [(31, 25), (51, 25), (51, 1.2), (39, 1.2)]
+    for i in range(1, 49):
+        y = 39-8*i/48
+        t = (y-31)/8
+        outline.append((y, 1.2+18.8*math.cos(t*math.pi/2)**2))
+    rings = [[(x, y, z) for y, z in outline] for x in (-95, 95)]
+    faces = [rings[0], rings[1]]
+    for i in range(len(outline)):
+        j = (i+1) % len(outline)
+        faces.append((rings[0][i], rings[0][j], rings[1][j], rings[1][i]))
+    cutter = frame_v2.make_mesh("Upper side termination roll-off", faces)
+    boolean(perimeter, cutter, "DIFFERENCE")
+    bpy.data.objects.remove(cutter, do_unlink=True)
     bpy.context.view_layer.objects.active = perimeter
     bevel = perimeter.modifiers.new("Rounded perimeter edges", "BEVEL")
     bevel.width = .2
@@ -201,48 +175,92 @@ def build_frame():
     return [perimeter, make_backing()]
 
 
+def rounded_end_cap(name, xmin, xmax):
+    outline = rounded_rectangle(22.2, 39, 0, 19.6, 6, 32)
+    rings = [[(x, y, z) for y, z in outline] for x in (xmin, xmax)]
+    faces = [rings[0], rings[1]]
+    for i in range(len(outline)):
+        j = (i+1) % len(outline)
+        faces.append((rings[0][i], rings[0][j], rings[1][j], rings[1][i]))
+    obj = frame_v2.make_mesh(name, faces)
+    bpy.context.view_layer.objects.active = obj
+    bevel = obj.modifiers.new("Rolled end contact edges", "BEVEL")
+    bevel.width = .65
+    bevel.segments = 6
+    bpy.ops.object.modifier_apply(modifier=bevel.name)
+    return obj
+
+
+def tapered_divider():
+    outline = [(-46, 0), (17, 0)]
+    for i in range(97):
+        y = 17-63*i/96
+        t = max(0, min((y+5)/22, 1))
+        depth = 1.2+18.3*math.cos(t*math.pi/2)**2
+        outline.append((y, depth))
+    rings = [[(x, y, z) for y, z in outline] for x in (24.6, 26.6)]
+    faces = [rings[0], rings[1]]
+    for i in range(len(outline)):
+        j = (i+1) % len(outline)
+        faces.append((rings[0][i], rings[0][j], rings[1][j], rings[1][i]))
+    obj = frame_v2.make_mesh("Single thin flowing divider", faces)
+    bpy.context.view_layer.objects.active = obj
+    bevel = obj.modifiers.new("Rounded divider contact edges", "BEVEL")
+    bevel.width = .65
+    bevel.segments = 6
+    bpy.ops.object.modifier_apply(modifier=bevel.name)
+    return obj
+
+
 def build_organizer():
+    left_edge = PERFUME_CENTER_X-PERFUME_THUMB_WIDTH/2
+    right_edge = PERFUME_CENTER_X+PERFUME_THUMB_WIDTH/2
+    def cup_top(x, edge, outer):
+        t = min(abs(x-edge)/abs(outer-edge), 1)
+        return PERFUME_THUMB_BOTTOM+(PERFUME_APRON_TOP-PERFUME_THUMB_BOTTOM)*math.sin(t*math.pi/2)**2
     parts = [
-        pocket_ring("Rounded battery well", (-82.6, 23.6, -47.6, 22.2, 4.6),
-                    (-84.2, 25.2, -49.2, 23.8, 6.2), lambda y: 15.7),
-        box("Battery side web blended into frame", (-88, -39, 0), (-82.6, 17.6, 15.7), .7),
-        box("Shared curved-pocket divider web", (23.6, -39, 0), (27.6, 17.6, 19.9), .7),
-        front_curb("Battery curved lower curb", -82.6, 23.6, -48, 14.9, 16.1,
+        tapered_divider(),
+        front_curb("Low battery front curb", -83.2, 24.8, -48, 14.9, 16.1,
                    lambda x: scallop(x, -29.5, 54, -46.4, -45.2)),
-        box("Perfume elevated ledge", (-65.2, 22.2, 0), (4.8, 23.4, 19.6), .2),
-        pocket_ring("Rounded perfume pocket", (-64, 3.6, 23.4, 47.2, .6),
-                    (-67, 6.6, 22.2, 48.4, 3),
-                    lambda y: open_top_height(y, 39, 43, 19.6)),
-        apron("Perfume saddle with central thumb scoop", -65.2, 4.8, 23.4, 18.4, 3,
-              28.0, lambda x: scallop(x, PERFUME_CENTER_X, PERFUME_THUMB_WIDTH,
-                                      PERFUME_THUMB_BOTTOM, PERFUME_APRON_TOP)),
-        pocket_ring("Rounded Touchland well", (27.6, 83.8, -45.3, 47.2, 6.6),
-                    (26.4, 85, -46.5, 48.4, 7.8),
-                    lambda y: open_top_height(y, 25, 39, 20)),
-        box("Touchland side web blended into frame", (83.8, -38.7, 0), (88, 25, 19.9), .55),
-        box("Touchland lower ledge", (26.4, -46.5, 0), (81, -45.3, 19.9), .2),
-        apron("Touchland sculpted lower pocket", 27.4, 84.0, -45.3, 18.8, .8,
-              -42.0, lambda x: scallop(x, 55.7, 35, -33, -23)),
+        apron("Perfume left curved end cradle", -65.2, left_edge, 23.4, 18.4, 3,
+              28, lambda x: cup_top(x, left_edge, -64)),
+        apron("Perfume right curved end cradle", right_edge, 4.8, 23.4, 18.4, 3,
+              28, lambda x: cup_top(x, right_edge, 3.6)),
+        rounded_end_cap("Perfume rounded left capsule end", -66, -64),
+        rounded_end_cap("Perfume rounded right capsule end", 3.6, 5.6),
+        apron("Touchland low curved front lip", 26.4, 86, -45.3, 18.8, .8,
+              -42, lambda x: scallop(x, 55.7, 38, -39, -32)),
     ]
-    # Carry the bottle's rounded outline through the lower apron and ledge.
-    trim = extrude_xy("Touchland outer profile trim",
-                      rounded_rectangle(26.4, 85, -46.5, 48.4, 7.8), -1, 21)
-    for part in parts[-2:]:
-        boolean(part, trim, "INTERSECT")
+    trim = extrude_xy("Touchland rounded lower silhouette",
+                      rounded_rectangle(26.4, 86, -46.5, 48.4, 8.0), -1, 21)
+    boolean(parts[-1], trim, "INTERSECT")
     bpy.data.objects.remove(trim, do_unlink=True)
-    parts.append(junction_fill())
-    thumb = extrude_xy("Full-depth perfume thumb channel",
-                       rounded_rectangle(PERFUME_CENTER_X-PERFUME_THUMB_WIDTH/2,
-                                         PERFUME_CENTER_X+PERFUME_THUMB_WIDTH/2,
-                                         PERFUME_CHANNEL_BASE, 55, 3), 1.2, 22)
-    boolean(parts[6], thumb, "DIFFERENCE")
-    bpy.data.objects.remove(thumb, do_unlink=True)
-    # Junction solid replaces redundant nested rings and separate side webs.
-    # Battery has no upper crossbar; only the independent perfume shelf remains.
-    removed = {0, 1, 2, 7, 8}
-    for index in removed:
-        bpy.data.objects.remove(parts[index], do_unlink=True)
-    return [part for index, part in enumerate(parts) if index not in removed]
+    # Sculpt each whole end cradle rather than stacking a plate on a cap.
+    for cup, cap, xmin, xmax in ((parts[2], parts[4], -65.2, left_edge),
+                                (parts[3], parts[5], right_edge, 4.8)):
+        boolean(cup, cap)
+        trim = extrude_xy("Capsule plan silhouette",
+                          rounded_rectangle(-66, 5.6, 22.2, 39, 4, 32), -1, 22)
+        boolean(cup, trim, "INTERSECT")
+        bpy.data.objects.remove(trim, do_unlink=True)
+        outline = rounded_rectangle(-66, 5.6, 0, 19.6, 3, 32)
+        rings = [[(x, y, z) for x, z in outline] for y in (15, 50)]
+        faces = [rings[0], rings[1]]
+        for i in range(len(outline)):
+            j = (i+1) % len(outline)
+            faces.append((rings[0][i], rings[0][j], rings[1][j], rings[1][i]))
+        trim = frame_v2.make_mesh("Rounded capsule front-end wrap", faces)
+        boolean(cup, trim, "INTERSECT")
+        bpy.data.objects.remove(trim, do_unlink=True)
+        for vertex in cup.data.vertices:
+            t = max(0, min((vertex.co.x-xmin)/(xmax-xmin), 1))
+            front_factor = max(0, min((vertex.co.z-15.4)/3, 1))
+            vertex.co.z += .4*math.sin(t*math.pi)**2*front_factor
+        cup.data.update()
+    bpy.data.objects.remove(parts[4], do_unlink=True)
+    bpy.data.objects.remove(parts[5], do_unlink=True)
+    parts = [part for index, part in enumerate(parts) if index not in (4, 5)]
+    return parts
 
 
 def move_to(obj, collection):
@@ -378,7 +396,7 @@ def build():
     bpy.ops.wm.save_as_mainfile(filepath=str(ROOT / "models/rimowa-production.blend"))
     print("PRODUCTION VERIFIED", tuple(round(d, 4) for d in result.dimensions),
           "volume mm3", round(volume, 2), "triangles", len(result.data.polygons))
-    print("PERFUME THUMB CHANNEL", PERFUME_THUMB_WIDTH, "mm mouth, shelf Y",
+    print("PERFUME THUMB CHANNEL", PERFUME_THUMB_WIDTH, "mm clear through floor; end seats Y",
           PERFUME_CHANNEL_BASE, "side top Y", PERFUME_APRON_TOP)
 
 

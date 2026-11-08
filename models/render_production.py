@@ -99,8 +99,8 @@ def render(name, target, eye, span):
     bpy.ops.render.render(write_still=True)
 
 
-render("production-angle.png", (0, 0, .007), (.025, -.035, .36), .225)
-render("production-thumb-scoop.png", (-.0302, .034, .01), (-.025, -.025, .26), .095)
+render("production-angle.png", (0, 0, .007), (.025, -.10, .32), .225)
+render("production-thumb-scoop.png", (-.0302, .034, .01), (-.025, -.065, .24), .095)
 
 # Rounded item envelopes illustrate access; they are never saved into the CAD file.
 for name, dimensions, center, color in (
@@ -118,4 +118,4 @@ for name, dimensions, center, color in (
     bevel.segments = 8
     bpy.ops.object.modifier_apply(modifier=bevel.name)
     item.data.materials.append(surface(name, color, .4))
-render("production-loaded.png", (0, 0, .007), (.025, -.035, .36), .225)
+render("production-loaded.png", (0, 0, .007), (.025, -.10, .32), .225)
