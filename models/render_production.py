@@ -30,6 +30,11 @@ product.data.materials.clear()
 product.data.materials.append(charcoal)
 for polygon in product.data.polygons:
     polygon.material_index = 0
+# Smooth curved facets while retaining the CAD's hard corners. No geometry change.
+bpy.ops.object.select_all(action="DESELECT")
+product.select_set(True)
+bpy.context.view_layer.objects.active = product
+bpy.ops.object.shade_smooth_by_angle(angle=math.radians(30), keep_sharp_edges=True)
 
 # The background provides contrast through the real openings in the mesh.
 bpy.ops.mesh.primitive_plane_add(size=2, location=(0, 0, -0.001))

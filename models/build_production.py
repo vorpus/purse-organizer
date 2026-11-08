@@ -18,10 +18,9 @@ import frame_v2
 BACK_THICKNESS = 1.2
 ITEM_BACK = 1.5
 PERFUME_CENTER_X = -30.2
-PERFUME_THUMB_WIDTH = 32.0
-PERFUME_THUMB_BOTTOM = 27.0
+PERFUME_THUMB_WIDTH = 15.0
 PERFUME_CHANNEL_BASE = 23.4
-PERFUME_APRON_TOP = 39.0
+PERFUME_APRON_TOP = 41.0
 ITEMS = (
     ("Anker 622", (105.0, 67.0, 13.0), (-29.5, -12.7)),
     ("Perfume", (66.4, 25.3, 16.2), (-30.2, 36.65)),
@@ -98,50 +97,6 @@ def scallop(x, center, width, low, high):
     return low + (high-low)*math.sin(t*math.pi/2)**2
 
 
-def apron(name, xmin, xmax, bottom, front, radius, rear_top, top_function):
-    """Loft a smooth open U section across X with a scalloped front mouth."""
-    rear = BACK_THICKNESS
-    thickness = 1.2
-
-    def section(top):
-        lip_radius = 0.35
-        def path(offset):
-            r = radius + offset
-            points = [(rear_top, rear-offset)]
-            for i in range(17):
-                angle = math.pi + i*math.pi/32
-                points.append((bottom+radius+r*math.sin(angle),
-                               rear+radius+r*math.cos(angle)))
-            for i in range(17):
-                angle = 1.5*math.pi + i*math.pi/32
-                points.append((bottom+radius+r*math.sin(angle),
-                               front-radius+r*math.cos(angle)))
-            points.append((top-lip_radius, front+offset))
-            return points
-        lip = []
-        for i in range(1, 9):
-            angle = i*math.pi/16
-            lip.append((top-lip_radius+lip_radius*math.sin(angle),
-                        front+thickness-lip_radius+lip_radius*math.cos(angle)))
-        lip.append((top, front+lip_radius))
-        for i in range(1, 8):
-            angle = math.pi/2+i*math.pi/16
-            lip.append((top-lip_radius+lip_radius*math.sin(angle),
-                        front+lip_radius+lip_radius*math.cos(angle)))
-        return path(thickness) + lip + list(reversed(path(0)))
-
-    rings = []
-    for i in range(97):
-        x = xmin + (xmax-xmin)*i/96
-        rings.append([(x, y, z) for y, z in section(top_function(x))])
-    faces = [rings[0], rings[-1]]
-    for first, second in zip(rings, rings[1:]):
-        for i in range(len(first)):
-            j = (i+1) % len(first)
-            faces.append((first[i], first[j], second[j], second[i]))
-    return frame_v2.make_mesh(name, faces)
-
-
 def front_curb(name, xmin, xmax, ymin, zmin, zmax, top_function):
     outline = [(xmin, ymin), (xmax, ymin)]
     outline += [(xmax-(xmax-xmin)*i/96, top_function(xmax-(xmax-xmin)*i/96))
@@ -175,91 +130,128 @@ def build_frame():
     return [perimeter, make_backing()]
 
 
-def rounded_end_cap(name, xmin, xmax):
-    outline = rounded_rectangle(22.2, 39, 0, 19.6, 6, 32)
-    rings = [[(x, y, z) for y, z in outline] for x in (xmin, xmax)]
-    faces = [rings[0], rings[1]]
+def perfume_capsule_halves():
+    rings = []
+    for i in range(65):
+        z = 20*i/64
+        if z < 4.2:
+            ymin = 26.4-4.2*math.sqrt(max(0, 1-((z-4.2)/4.2)**2))
+        elif z > 15.4:
+            ymin = 26.4-4.2*math.sqrt(max(0, 1-((z-15.4)/4.6)**2))
+        else:
+            ymin = 22.2
+        radius = (PERFUME_APRON_TOP-ymin)/2-.01
+        # Retain the front/rear pill silhouette while providing enough exterior
+        # material around the conservative square-ended item cavity. This only
+        # thickens the two lower end corners; the inner fit stays unchanged.
+        face_blend = max(0, 1-z/1.2, (z-18.4)/1.6)
+        bottom_radius = 3+(radius-3)*face_blend
+        outline = []
+        corners = ((5.6-radius, PERFUME_APRON_TOP-radius, radius),
+                   (-66+radius, PERFUME_APRON_TOP-radius, radius),
+                   (-66+bottom_radius, ymin+bottom_radius, bottom_radius),
+                   (5.6-bottom_radius, ymin+bottom_radius, bottom_radius))
+        for corner, (cx, cy, r) in enumerate(corners):
+            for step in range(33):
+                a = (corner+step/32)*math.pi/2
+                outline.append((cx+r*math.cos(a), cy+r*math.sin(a), z))
+        rings.append(outline)
+    faces = [rings[0], rings[-1]]
+    for first, second in zip(rings, rings[1:]):
+        for i in range(len(first)):
+            j = (i+1) % len(first)
+            faces.append((first[i], first[j], second[j], second[i]))
+    outer = frame_v2.make_mesh("Continuous pill cradle shell", faces)
+    outline = rounded_rectangle(23.4, 65, 1.2, 18.4, 3, 32)
+    cut_rings = [[(x, y, z) for y, z in outline] for x in (-64, 3.6)]
+    faces = [cut_rings[0], cut_rings[1]]
     for i in range(len(outline)):
         j = (i+1) % len(outline)
-        faces.append((rings[0][i], rings[0][j], rings[1][j], rings[1][i]))
-    obj = frame_v2.make_mesh(name, faces)
-    bpy.context.view_layer.objects.active = obj
-    bevel = obj.modifiers.new("Rolled end contact edges", "BEVEL")
-    bevel.width = .65
-    bevel.segments = 6
-    bpy.ops.object.modifier_apply(modifier=bevel.name)
-    return obj
+        faces.append((cut_rings[0][i], cut_rings[0][j], cut_rings[1][j], cut_rings[1][i]))
+    cavity = frame_v2.make_mesh("Perfume rounded inner cavity", faces)
+    boolean(outer, cavity, "DIFFERENCE")
+    bpy.data.objects.remove(cavity, do_unlink=True)
+    halves = []
+    for name, xmin, xmax in (("Perfume left pill cradle", -70, PERFUME_CENTER_X-PERFUME_THUMB_WIDTH/2),
+                            ("Perfume right pill cradle", PERFUME_CENTER_X+PERFUME_THUMB_WIDTH/2, 10)):
+        half = outer.copy()
+        half.data = outer.data.copy()
+        bpy.context.scene.collection.objects.link(half)
+        half.name = name
+        trim = box("Half shell trim", (xmin, 15, -1), (xmax, 50, 22))
+        boolean(half, trim, "INTERSECT")
+        bpy.data.objects.remove(trim, do_unlink=True)
+        # Roll only the exposed central cut rim, preserving the cavity volume.
+        cut_x = xmax if "left" in name else xmin
+        bm = bmesh.new()
+        bm.from_mesh(half.data)
+        weights = bm.edges.layers.float.new("bevel_weight_edge")
+        for edge in bm.edges:
+            if all(abs(v.co.x-cut_x) < 1e-4 for v in edge.verts) and edge.is_manifold:
+                if edge.calc_face_angle() > .15:
+                    edge[weights] = 1
+        bm.to_mesh(half.data)
+        bm.free()
+        bpy.context.view_layer.objects.active = half
+        bevel = half.modifiers.new("Soft thumb contact rim", "BEVEL")
+        bevel.limit_method = "WEIGHT"
+        bevel.width = .35
+        bevel.segments = 4
+        bpy.ops.object.modifier_apply(modifier=bevel.name)
+        halves.append(half)
+    bpy.data.objects.remove(outer, do_unlink=True)
+    return halves
 
 
-def tapered_divider():
-    outline = [(-46, 0), (17, 0)]
-    for i in range(97):
-        y = 17-63*i/96
-        t = max(0, min((y+5)/22, 1))
-        depth = 1.2+18.3*math.cos(t*math.pi/2)**2
-        outline.append((y, depth))
-    rings = [[(x, y, z) for y, z in outline] for x in (24.6, 26.6)]
-    faces = [rings[0], rings[1]]
-    for i in range(len(outline)):
-        j = (i+1) % len(outline)
-        faces.append((rings[0][i], rings[0][j], rings[1][j], rings[1][i]))
-    obj = frame_v2.make_mesh("Single thin flowing divider", faces)
-    bpy.context.view_layer.objects.active = obj
-    bevel = obj.modifiers.new("Rounded divider contact edges", "BEVEL")
-    bevel.width = .65
-    bevel.segments = 6
-    bpy.ops.object.modifier_apply(modifier=bevel.name)
-    return obj
+def continuous_touch_shell():
+    # One shared-vertex sweep from divider, around the lower pocket, into
+    # the fitted right wall. Its convex underside flows directly into back.
+    path = []
+    for i in range(49):
+        path.append((26.6, 17-55.7*i/48, -1, 0))
+    for i in range(1, 33):
+        a = math.pi+i*math.pi/64
+        path.append((33.2+6.6*math.cos(a), -38.7+6.6*math.sin(a), math.cos(a), math.sin(a)))
+    for i in range(1, 97):
+        path.append((33.2+(81-33.2)*i/96, -45.3, 0, -1))
+    for i in range(1, 33):
+        a = 1.5*math.pi+i*math.pi/64
+        path.append((81+6.6*math.cos(a), -38.7+6.6*math.sin(a), math.cos(a), math.sin(a)))
+    for i in range(1, 65):
+        path.append((87.6, -38.7+77.7*i/64, 1, 0))
+    rings = []
+    for x, y, nx, ny in path:
+        downward = abs(ny)
+        thickness = 2+1.5*downward
+        front_rise = .82+(5.5-1.0*math.exp(-((x-55.7)/13)**2))*downward
+        depth = 20
+        if nx < -.99 and y > -5:
+            depth = 1.2+18.8*math.cos(min((y+5)/22, 1)*math.pi/2)**2
+        if nx > .99 and y > 31:
+            depth = 1.2+18.8*math.cos(min((y-31)/8, 1)*math.pi/2)**2
+        section = [(0, 1.2), (0, 18)]
+        for i in range(1, 17):
+            a = -math.pi/2+i*math.pi/32
+            section.append((.8+.8*math.sin(a), 18+.8*math.cos(a)))
+        section.extend(((front_rise, 18.8), (front_rise, 20), (.8, 20)))
+        for i in range(1, 17):
+            a = -i*math.pi/32
+            section.append((.8+(thickness+.8)*math.sin(a), 18+2*math.cos(a)))
+        section.append((-thickness, 0))
+        rings.append([(x-nx*d, y-ny*d, z*depth/20) for d, z in section])
+    faces = [rings[0], rings[-1]]
+    for first, second in zip(rings, rings[1:]):
+        for i in range(len(first)):
+            j = (i+1) % len(first)
+            faces.append((first[i], first[j], second[j], second[i]))
+    return frame_v2.make_mesh("Continuous Touchland cradle and divider", faces)
 
 
 def build_organizer():
-    left_edge = PERFUME_CENTER_X-PERFUME_THUMB_WIDTH/2
-    right_edge = PERFUME_CENTER_X+PERFUME_THUMB_WIDTH/2
-    def cup_top(x, edge, outer):
-        t = min(abs(x-edge)/abs(outer-edge), 1)
-        return PERFUME_THUMB_BOTTOM+(PERFUME_APRON_TOP-PERFUME_THUMB_BOTTOM)*math.sin(t*math.pi/2)**2
-    parts = [
-        tapered_divider(),
-        front_curb("Low battery front curb", -83.2, 24.8, -48, 14.9, 16.1,
-                   lambda x: scallop(x, -29.5, 54, -46.4, -45.2)),
-        apron("Perfume left curved end cradle", -65.2, left_edge, 23.4, 18.4, 3,
-              28, lambda x: cup_top(x, left_edge, -64)),
-        apron("Perfume right curved end cradle", right_edge, 4.8, 23.4, 18.4, 3,
-              28, lambda x: cup_top(x, right_edge, 3.6)),
-        rounded_end_cap("Perfume rounded left capsule end", -66, -64),
-        rounded_end_cap("Perfume rounded right capsule end", 3.6, 5.6),
-        apron("Touchland low curved front lip", 26.4, 86, -45.3, 18.8, .8,
-              -42, lambda x: scallop(x, 55.7, 38, -39, -32)),
-    ]
-    trim = extrude_xy("Touchland rounded lower silhouette",
-                      rounded_rectangle(26.4, 86, -46.5, 48.4, 8.0), -1, 21)
-    boolean(parts[-1], trim, "INTERSECT")
-    bpy.data.objects.remove(trim, do_unlink=True)
-    # Sculpt each whole end cradle rather than stacking a plate on a cap.
-    for cup, cap, xmin, xmax in ((parts[2], parts[4], -65.2, left_edge),
-                                (parts[3], parts[5], right_edge, 4.8)):
-        boolean(cup, cap)
-        trim = extrude_xy("Capsule plan silhouette",
-                          rounded_rectangle(-66, 5.6, 22.2, 39, 4, 32), -1, 22)
-        boolean(cup, trim, "INTERSECT")
-        bpy.data.objects.remove(trim, do_unlink=True)
-        outline = rounded_rectangle(-66, 5.6, 0, 19.6, 3, 32)
-        rings = [[(x, y, z) for x, z in outline] for y in (15, 50)]
-        faces = [rings[0], rings[1]]
-        for i in range(len(outline)):
-            j = (i+1) % len(outline)
-            faces.append((rings[0][i], rings[0][j], rings[1][j], rings[1][i]))
-        trim = frame_v2.make_mesh("Rounded capsule front-end wrap", faces)
-        boolean(cup, trim, "INTERSECT")
-        bpy.data.objects.remove(trim, do_unlink=True)
-        for vertex in cup.data.vertices:
-            t = max(0, min((vertex.co.x-xmin)/(xmax-xmin), 1))
-            front_factor = max(0, min((vertex.co.z-15.4)/3, 1))
-            vertex.co.z += .4*math.sin(t*math.pi)**2*front_factor
-        cup.data.update()
-    bpy.data.objects.remove(parts[4], do_unlink=True)
-    bpy.data.objects.remove(parts[5], do_unlink=True)
-    parts = [part for index, part in enumerate(parts) if index not in (4, 5)]
+    parts = [continuous_touch_shell(),
+             front_curb("Low battery front curb", -83.2, 24.8, -48, 14.9, 16.1,
+                        lambda x: scallop(x, -29.5, 54, -46.4, -45.2))]
+    parts.extend(perfume_capsule_halves())
     return parts
 
 

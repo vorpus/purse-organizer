@@ -44,7 +44,8 @@ removal easier. The perfume retains only its own two end supports.
 
 Build smooth integrated pockets based on the approved visual concept, with
 solid sides, deliberate openings in the backing, and rounded contact edges.
-Use two curved pill-like end cradles for the perfume. The central thumb gap
+Use two curved pill-like end cradles for the perfume, with a 15 mm central gap
+(user requested 10-20 mm). The central thumb gap
 must remove the bottom shelf as well as the front retainer, leaving no bridge
 under the middle of the perfume. Connect the two cradles through the frame
 and backing so this remains one printable object. Preserve the horizontal perfume
@@ -54,3 +55,6 @@ Avoid stacked plates, thick junction fills, and redundant inner side walls.
 Use thin flowing shells, a shorter center divider, and a much lower Touchland
 front lip. Preserve the fitted outside contour while reducing unnecessary
 material on both outer sides.
+The Touchland lip must flow continuously into its side walls as one curved
+pocket. Perfume support sections must join the backing smoothly without a
+reverse-curled bottom or separate-looking ledge.

@@ -13,11 +13,11 @@ frame. The revised retention and thumb access still need checking in the print.
 - The accepted 2 mm rear inset and 5 mm taper length are retained. Corner curves
   are finer and contact edges have a 0.2 mm relief.
 - The perfume remains horizontal above the battery, with its broad face
-  parallel to the backing. Two curved end cradles support it. A centered 32 mm
+  parallel to the backing. Two curved end cradles support it. A centered 15 mm
   gap removes the entire middle, including the bottom supports. The backing
   opening extends below the gap so no central bridge obstructs the thumb.
-  Each end has a rounded capsule contour and a gently crowned front surface,
-  with no separate projecting end plate.
+  The longer halves follow a capsule contour and join the backing without an
+  exposed reverse return or a separate projecting end plate.
 - The thick junction fill and duplicate outer guide walls are removed. Outer
   sides use the fitted 2.4 mm frame wall alone. Their upper ends roll down to
   the backing over Y31 to Y39 while retaining the outside XY contour.
@@ -29,12 +29,14 @@ frame. The revised retention and thumb access still need checking in the print.
   shelf; excessive tilting can meet the lower curb.
   Its upper edge has no enclosing wall; only the perfume's two independent
   end supports remain above it.
-- Touchland uses a lower curved front lip, reaching Y-32 at the ends and Y-39
-  centrally. Its upper portion remains exposed for upward removal.
+- Touchland uses one continuous swept shell from the short divider, around
+  its low front lip, into the fitted right wall. Rounded corners and a shared
+  rim replace the separate apron. Its upper portion remains exposed for
+  upward removal.
 
 Overall dimensions are approximately 180 x 98.47 x 20 mm. Edge rounding slightly
 relieves the earlier frame height. The solid mesh volume is approximately
-29.11 cubic centimeters; actual filament use also depends on slicing and support.
+32.68 cubic centimeters; actual filament use also depends on slicing and support.
 
 ## Editing and rebuilding
 
@@ -53,6 +55,8 @@ and validating the removal path.
 
 The preview script loads the manufacturing file and renders a temporary studio
 scene. Loaded previews use rounded item envelopes to illustrate placement.
+Curved facets use angle-based smooth shading; preview shading does not change
+the manufacturing geometry.
 The brown leather surface beneath the tray is a rendering reference for the
 bag lining. These display objects are excluded from the STL.
 
@@ -69,7 +73,7 @@ STL: perfume and Touchland translate upward 60 mm; the battery tilts forward
 nominal geometric clearance, not real friction, flexible-wall behavior, or
 retention during movement. The proxy corners simplify the actual cases
 (battery R4, perfume lower section R3, Touchland R6 mm).
-An independent solid intersection probe also verifies that the 32 mm central
+An independent solid intersection probe also verifies that the 15 mm central
 perfume opening contains no shelf or retaining material above the backing.
 
 ## Printing
@@ -90,10 +94,10 @@ The headless Cura result is a geometry and support preview, not supplied
 printer-ready G-code. Import the STL into Cura with the printer's profile and
 review its preview before saving the printer file.
 
-The final preview has 100 layers and estimates 4 h 14 min / 43.4 g PLA,
-including 7.0 g support. The deposited skirt and part fit inside the 220 mm
+The final preview has 100 layers and estimates 4 h 45 min / 48.7 g PLA,
+including 10.4 g support. The deposited skirt and part fit inside the 220 mm
 bed. Estimates assume PLA density 1.24 g/cm3. Verified STL SHA-256:
-`4A388407B45C3D3474DC50C881CB4CBE10337C8F3E07E7CDEEA29866B2D4164D`.
+`EF8CE5F22FA760A844E4E7607DBE6DB0656F04B4C407E8EAE0942049673B22C0`.
 
 Inspect the perfume scoop and mouth edges after support removal. Confirm that
 the perfume slides out as a complete case, the battery exits independently,
