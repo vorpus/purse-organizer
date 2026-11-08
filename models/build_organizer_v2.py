@@ -69,18 +69,16 @@ def build_organizer():
     parts = []
     def add(name, low, high):
         parts.append(box(name, low, high))
-    # Battery rests on a shallow foot, tilts forward, then lifts clear.
-    add("Battery foot", (-84, -46.5, 0), (25.2, -45.3, 16.1))
-    add("Battery front stop", (-78, -45.4, 14.9), (19, -42.5, 16.1))
+    # The frame bottom supports the battery; the low stop joins that same rail.
+    add("Battery front stop", (-78, -48, 14.9), (19, -43.5, 16.1))
     for y in (-35, 10):
-        add("Battery back tie", (-84, y-4, 0), (25.2, y+4, 1.2))
-        for x in (-83.8, 23.6):
-            add("Battery side guide", (x, y-4, 0), (x+1.2, y+4, 15.7))
+        add("Battery left guide", (-88, y-4, 0), (-82.6, y+4, 15.7))
+        add("Battery right guide", (23.6, y-4, 0), (24.8, y+4, 15.7))
+    add("Battery guide anchor", (23.6, 6, 0), (32, 9, 1.2))
 
     # Perfume lower cradle follows smooth corner curves; end guides restrain X.
     # The top stays open for upward extraction. Two front straps restrain Z.
     add("Perfume shelf", (-65.2, 22.2, 0), (4.8, 23.4, 19.6))
-    add("Perfume back tie", (-65.2, 30, 0), (4.8, 35, 1.2))
     for x in (-49, -14):
         parts.append(cuff("Perfume rounded cradle", x, 23.4, 39, 18.4))
     for x in (-65.2, 3.6):
@@ -214,7 +212,7 @@ scene.collection.children.link(references)
 envelope_color = material("Item envelopes", (.38, .58, .43))
 label_color = material("Envelope labels", (.95, .95, .95))
 for name, size, location in (
-    ("Anker 622", BATTERY, (-29.5, -11.5)),
+    ("Anker 622", BATTERY, (-29.5, -12.7)),
     ("Perfume", PERFUME, (-30.2, 36.65)),
     ("Touchland", TOUCHLAND, (55.7, 2.5)),
 ):

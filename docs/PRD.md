@@ -34,3 +34,5 @@ Rear taper amount is still provisional. A 5 mm stand-off alone does not determin
 the contour or taper angle. V2 starts with a 2 mm inward offset at the rear,
 returning to the tested perimeter over 5 mm. Verify deeper seating, corner
 contact, closure, item clearance, and removal on the next print.
+
+Battery and perfume share the frame backing. Battery rests on the frame bottom; perfume retains a small elevated ledge and retaining lips.

@@ -24,7 +24,7 @@ print.
 
 Perfume has two rounded cradle straps, end guides, and a lower stop. The front
 straps reach only partway up the case, leaving the upper portion accessible.
-The battery uses short side guides and a shallow lower front stop, allowing it
+The battery rests on the frame bottom, with short side guides and a lower front stop, allowing it
 to tilt toward the opening and lift out. Touchland has short side guides and two
 front straps, leaving its upper portion accessible. Its seat has a small 0.8 mm
 inside corner radius to accommodate a nearly square lower cross-section.
@@ -67,3 +67,17 @@ packing objection concerned a different orientation and does not apply.
 
 The loaded preview shows simple item envelopes to clarify placement and face
 orientation. These references are excluded from the printable STL.
+
+
+## Shared frame support
+
+The battery foot and its two backing strips have been removed. The front stop
+joins the frame bottom rail. Left guides join the side rail, and a small local
+anchor connects the upper right guide to the rear lattice. The battery can
+settle about 1.2 mm lower onto the tapered frame bottom; its exact seating
+depends on its rounded corners.
+
+The perfume backing strip has also been removed. Its small shelf and rounded
+retaining straps join the frame lattice. Both items share that lattice as their
+backing. The perfume remains above the battery with its broad face parallel to
+the back and an upward removal path.
