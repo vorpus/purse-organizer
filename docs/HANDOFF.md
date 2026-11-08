@@ -1,5 +1,13 @@
 # Handoff to marzipan
 
+## Current continuation
+
+The user confirmed a good fit from the shared-base V2 test print and requested
+the production model. The production direction follows the approved fitted
+pocket concept, with a central thumb scoop in the horizontal perfume cradle.
+See [production notes](PRODUCTION.md) and the production build commands in
+the README. The earlier sections below record the initial scan handoff.
+
 ## Goal and scope
 
 Create a 3D-printable organizer insert for the user's Rimowa crossbody bag.

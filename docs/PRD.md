@@ -30,9 +30,20 @@ Minimize accessible support material and avoid trapped support.
 
 ## Fit iteration
 
-Rear taper amount is still provisional. A 5 mm stand-off alone does not determine
-the contour or taper angle. V2 starts with a 2 mm inward offset at the rear,
-returning to the tested perimeter over 5 mm. Verify deeper seating, corner
-contact, closure, item clearance, and removal on the next print.
+The user reported a good fit from the shared-base V2 print and authorized the
+production version. Carry its 2 mm rear inset and 5 mm taper length into the
+production frame. Verify the revised pockets and removal paths physically
+after printing the production model.
 
 Battery and perfume share the frame backing. Battery rests on the frame bottom; perfume retains a small elevated ledge and retaining lips.
+Leave the battery's upper edge open, without a surrounding top wall, to make
+removal easier. The perfume retains only its own necessary supporting shelf.
+
+## Production refinement
+
+Build smooth integrated pockets based on the approved visual concept, with
+solid sides, deliberate openings in the backing, and rounded contact edges.
+Extend the central thumb carveout all the way to the perfume shelf, dividing
+the front retainer into two side sections. Keep the shelf and shared backing
+connected so this remains one printable object. Preserve the horizontal perfume
+orientation and its broad face parallel to the organizer back.
