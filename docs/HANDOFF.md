@@ -69,3 +69,12 @@ fit; do not invent missing interior geometry or claim the frame is fit-verified.
 The provisional frame, Blender source, and STL are in `models/`. See
 [fit-test notes](FIT-TEST.md) for scan views, the footprint estimate, and the
 measurements needed to calibrate it.
+
+## V2 continuation
+
+The user printed V1 and confirmed its footprint. It seats approximately 5 mm
+ahead of the back at the inward taper. User confirmed 20 mm usable depth,
+Ender 3 V3 SE, 0.4 mm nozzle, and PLA. See [requirements](PRD.md) and
+[V2 notes](ORGANIZER-V2.md). V2 combines a tapered frame and three item holders
+into one printable STL, with separate source collections for future remodeling.
+The physical fit of V2 remains to be tested.

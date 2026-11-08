@@ -28,3 +28,14 @@ the intended seating plane, just below the rigid lip on the side without the
 three large holes. Measure lining to lining with the liner relaxed. Clearance
 is per side. See [the fit-test notes](docs/FIT-TEST.md) for scan views and Cura
 setup.
+
+## Build the deeper organizer
+
+```powershell
+& 'C:/Program Files/Blender Foundation/Blender 5.1/blender.exe' -b --factory-startup --python-exit-code 1 --python models/build_organizer_v2.py
+```
+
+This creates `models/rimowa-organizer-v2.stl` as one connected object and
+`models/rimowa-organizer-v2.blend` with separate editable frame and organizer
+source collections. The build validates the final STL by re-importing it.
+See [V2 notes](docs/ORGANIZER-V2.md) for fit assumptions, dimensions, and print setup.
