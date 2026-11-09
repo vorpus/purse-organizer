@@ -1,5 +1,19 @@
 # Handoff to marzipan
 
+## Current continuation
+
+The user confirmed a good fit from the shared-base V2 print. Latest revision:
+perfume has an open back with rounded corners, a lowered front rim, and a
+25 mm central opening through the floor. Both lower compartments have no
+front retainers or extra floor/curb; items rest on the frame bottom. The center
+divider runs straight down, and both outer walls match its taper. Lower frame
+seating geometry is preserved; upper outer wall depth is reduced. Revised
+physical retention remains untested.
+The perfume side walls are raised 3 mm; front size and compartment position
+are retained. The user cancelled the proposed 2 mm downward move.
+See [production notes](PRODUCTION.md) and the production build commands in
+the README. The earlier sections below record the initial scan handoff.
+
 ## Goal and scope
 
 Create a 3D-printable organizer insert for the user's Rimowa crossbody bag.
@@ -63,3 +77,18 @@ parameterized, 3D-printable fit-test frame for that half only. Blender and Cura
 are installed here. Show the selected half and assess scan scale/reliability
 before choosing dimensions. Ask for physical measurements needed to validate
 fit; do not invent missing interior geometry or claim the frame is fit-verified.
+
+## Continuation
+
+The provisional frame, Blender source, and STL are in `models/`. See
+[fit-test notes](FIT-TEST.md) for scan views, the footprint estimate, and the
+measurements needed to calibrate it.
+
+## V2 continuation
+
+The user printed V1 and confirmed its footprint. It seats approximately 5 mm
+ahead of the back at the inward taper. User confirmed 20 mm usable depth,
+Ender 3 V3 SE, 0.4 mm nozzle, and PLA. See [requirements](PRD.md) and
+[V2 notes](ORGANIZER-V2.md). V2 combines a tapered frame and three item holders
+into one printable STL, with separate source collections for future remodeling.
+The physical fit of V2 remains to be tested.
