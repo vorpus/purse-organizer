@@ -22,8 +22,9 @@ frame. The revised retention and thumb access still need checking in the print.
   the matching backing area. The purse lining supports the item from behind;
   small end connections keep the cradles attached to the frame.
   Rear-opening corners have a 7 mm radius. The front rim is lowered from Y41
-  to Y33.7 to meet the side rim. The side-cap tips are lowered to the same
-  level, with rounded contact edges.
+  to Y33.7. The side walls rise 3 mm higher, to Y36.7, and blend down into
+  the unchanged front rim. The compartment, supports, and item position have
+  not moved downward; the 2 mm lowering proposal was cancelled.
 - The thick junction fill and duplicate outer guide walls are removed. Outer
   sides use the fitted 2.4 mm frame wall alone. Both outer walls and the center
   divider use the same depth taper from Y-5 to Y17. The lower seating contour
@@ -44,7 +45,7 @@ frame. The revised retention and thumb access still need checking in the print.
 
 Overall dimensions are approximately 180 x 98.47 x 20 mm. Edge rounding slightly
 relieves the earlier frame height. The solid mesh volume is approximately
-24.21 cubic centimeters; actual filament use also depends on slicing and support.
+24.33 cubic centimeters; actual filament use also depends on slicing and support.
 
 ## Editing and rebuilding
 
@@ -104,11 +105,11 @@ The headless Cura result is a geometry and support preview, not supplied
 printer-ready G-code. Import the STL into Cura with the printer's profile and
 review its preview before saving the printer file.
 
-The final preview has 100 layers and estimates 3 h 4 min / 33.2 g PLA,
-including 2.7 g support, all beneath the perfume. The deposited skirt and part
+The final preview has 100 layers and estimates 3 h 3 min / 32.9 g PLA,
+including 2.3 g support, all beneath the perfume. The deposited skirt and part
 fit inside the 220 mm
 bed. Estimates assume PLA density 1.24 g/cm3. Verified STL SHA-256:
-`819A78D1E3F5DBA7EFA54C716E1E6198431BF89B26F0D14CBA204DA5BA957A50`.
+`67370E8B55A197E9DA9C44E823C302C827070E35E4E8ABE066B6F0E7B2F57F54`.
 
 Inspect the perfume scoop and mouth edges after support removal. Confirm that
 the perfume slides out as a complete case, the battery exits independently,

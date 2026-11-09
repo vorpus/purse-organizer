@@ -9,6 +9,8 @@ front retainers or extra floor/curb; items rest on the frame bottom. The center
 divider runs straight down, and both outer walls match its taper. Lower frame
 seating geometry is preserved; upper outer wall depth is reduced. Revised
 physical retention remains untested.
+The perfume side walls are raised 3 mm; front size and compartment position
+are retained. The user cancelled the proposed 2 mm downward move.
 See [production notes](PRODUCTION.md) and the production build commands in
 the README. The earlier sections below record the initial scan handoff.
 

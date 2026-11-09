@@ -68,3 +68,7 @@ Latest lower-compartment revision supersedes the continuous front-lip design:
 remove the right pocket's front lip and the battery's extra lower plate/curb.
 Both items use the frame bottom. Extend the center divider straight down to
 the bottom wall, without curving toward the right.
+
+Raise the perfume side walls by 3 mm while keeping the front retainers the
+same size and keeping the compartment at its existing position. The proposed
+2 mm downward move was cancelled to preserve battery clearance.

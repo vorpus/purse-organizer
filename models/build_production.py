@@ -22,6 +22,7 @@ PERFUME_THUMB_WIDTH = 25.0
 PERFUME_CHANNEL_BASE = 23.4
 PERFUME_APRON_TOP = 41.0
 PERFUME_FRONT_TOP = 33.7
+PERFUME_SIDE_TOP = PERFUME_FRONT_TOP+3.0
 ITEMS = (
     ("Anker 622", (105.0, 67.0, 13.0), (-29.5, -12.7)),
     ("Perfume", (66.4, 25.3, 16.2), (-30.2, 36.65)),
@@ -125,6 +126,10 @@ def build_frame():
 
 
 def perfume_capsule_halves():
+    def rim_height(z):
+        t = max(0, min((z-14.4)/4, 1))
+        return PERFUME_FRONT_TOP+(PERFUME_SIDE_TOP-PERFUME_FRONT_TOP)*math.cos(t*math.pi/2)**2
+
     rings = []
     for i in range(65):
         z = 20*i/64
@@ -175,10 +180,13 @@ def perfume_capsule_halves():
     cavity = frame_v2.make_mesh("Perfume rounded inner cavity", faces)
     boolean(outer, cavity, "DIFFERENCE")
     bpy.data.objects.remove(cavity, do_unlink=True)
-    # Lower the front mouth to the outer side rim (Y33.7 at the front plane),
-    # continuing across the side caps so no raised tips remain.
-    profile = [(50, -2), (50, 22), (PERFUME_FRONT_TOP, 22),
-               (PERFUME_FRONT_TOP, -2)]
+    # Taller sides flow into the unchanged front retainer. The entire front
+    # slab from Z18.4 onward keeps its original Y33.7 rim and dimensions.
+    profile = [(50, -2), (50, 22), (PERFUME_FRONT_TOP, 22)]
+    rim_stations = sorted({20-20*i/80 for i in range(81)} | {14.4, 18.4}, reverse=True)
+    for z in rim_stations:
+        profile.append((rim_height(z), z))
+    profile.append((PERFUME_SIDE_TOP, -2))
     cut_rings = [[(x, y, z) for y, z in profile] for x in (-70, 10)]
     faces = [cut_rings[0], cut_rings[1]]
     for i in range(len(profile)):
@@ -204,7 +212,7 @@ def perfume_capsule_halves():
         weights = bm.edges.layers.float.new("bevel_weight_edge")
         for edge in bm.edges:
             if edge.is_manifold and (all(abs(v.co.x-cut_x) < 1e-4 for v in edge.verts) or
-                                     all(abs(v.co.y-PERFUME_FRONT_TOP) < 1e-4 for v in edge.verts)):
+                                     all(abs(v.co.y-rim_height(v.co.z)) < 1e-4 for v in edge.verts)):
                 if edge.calc_face_angle() > .15:
                     edge[weights] = 1
         bm.to_mesh(half.data)
