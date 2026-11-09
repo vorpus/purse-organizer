@@ -1,55 +1,39 @@
 # purse-organizer
 
-Design a 3D-printable organizer insert for a Rimowa crossbody bag, starting with a frame to test the fit in one half.
+3D-printable organizer insert for a Rimowa crossbody bag. Fits either half.
 
-## Continue on another computer
+![Final organizer](img/final.png)
 
-Clone the private repository with an authenticated GitHub CLI:
+## The problem
 
-```sh
-gh repo clone vorpus/purse-organizer
-cd purse-organizer
-```
+The purse fits nothing, and I have to tetris all my edc to close it
 
-Read [the handoff](docs/HANDOFF.md) for requirements, scan details, references, and next steps. The original scan is included in `scans/Untitled Object.usdz`.
+## The solution
 
-## Build the fit-test frame
+Purpose-built organizer so I can take advantage of the Y axis for storage
 
-From the repository root in PowerShell, run Blender with the measured inside
-width and height in millimeters. This replaces the generated Blender and STL
-files in `models/`.
+## Methodology
 
-```powershell
-& 'C:/Program Files/Blender Foundation/Blender 5.1/blender.exe' -b --factory-startup --python-exit-code 1 --python models/build_fit_test.py -- --width 182 --height 102 --clearance 1
-```
+### Low fidelity scans
 
-The numbers above are provisional scan estimates. Take both measurements at
-the intended seating plane, just below the rigid lip on the side without the
-three large holes. Measure lining to lining with the liner relaxed. Clearance
-is per side. See [the fit-test notes](docs/FIT-TEST.md) for scan views and Cura
-setup.
+![Low fidelity scan](img/scan-1.png)
 
-## Build the deeper organizer
+Use the Apple's official [Reality Composer](https://apps.apple.com/us/app/reality-composer/id1462358802) to make a scan of the compartment (`scans/Untitled Object.usdz`).
 
-```powershell
-& 'C:/Program Files/Blender Foundation/Blender 5.1/blender.exe' -b --factory-startup --python-exit-code 1 --python models/build_organizer_v2.py
-```
+I also scanned the wax perfume because it's not a common object with readily available dimensions (`scans/Untitled Object 3.usdz`).
 
-This creates `models/rimowa-organizer-v2.stl` as one connected object and
-`models/rimowa-organizer-v2.blend` with separate editable frame and organizer
-source collections. The build validates the final STL by re-importing it.
-See [V2 notes](docs/ORGANIZER-V2.md) for fit assumptions, dimensions, and print setup.
+### Iterate with codex
 
-## Build the production organizer
+![Test fits](img/test-fits.png)
 
-```powershell
-& 'C:/Program Files/Blender Foundation/Blender 5.1/blender.exe' -b --factory-startup --python-exit-code 1 --python models/build_production.py
-& 'C:/Program Files/Blender Foundation/Blender 5.1/blender.exe' -b --factory-startup -t 6 --python-exit-code 1 --python models/render_production.py
-```
+All of the fits were correct on the first try:
+* outside frame test fit was snug. Even with my terrible scan, seems codex was able to figure out an approximate thickness of the aluminum + leather and subtract it from official dimensions
+* I only gave codex the names of my edc objects, eg "touchland spray" and "anker 622 maggo". Codex found the correct dimensions and the prototypes had snug fits
 
-The first command creates `models/rimowa-production.stl` and
-`models/rimowa-production.blend`, with separate editable frame and organizer
-source collections. It verifies the exported STL by re-importing it. The second
-command renders previews from the actual CAD into `docs/production-*.png`.
-Read [production notes](docs/PRODUCTION.md) for the thumb scoop, item access,
-and slicer settings.
+Codex prefers adding and subtracting shapes, and the final product reflects that. I would have preferred more contouring and tapered edges (for example, on how the top compartment joins with the backplate), but I'm not sure the design/CAD term for this, so I couldn't achieve that effect.
+
+Final result is more utilitarian.
+
+## Closing
+
+Model used: Astra-6 on Medium. This used ~250% of a $20 codex subscription's weekly quota. RIP my resets.
