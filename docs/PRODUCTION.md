@@ -18,6 +18,9 @@ frame. The revised retention and thumb access still need checking in the print.
   opening extends below the gap so no central bridge obstructs the thumb.
   The longer halves follow a capsule contour and join the backing without an
   exposed reverse return or a separate projecting end plate.
+  Rear panels that mirrored the front retainers are removed, together with
+  the matching backing area. The purse lining supports the item from behind;
+  small end connections keep the cradles attached to the frame.
 - The thick junction fill and duplicate outer guide walls are removed. Outer
   sides use the fitted 2.4 mm frame wall alone. Their upper ends roll down to
   the backing over Y31 to Y39 while retaining the outside XY contour.
@@ -33,10 +36,13 @@ frame. The revised retention and thumb access still need checking in the print.
   its low front lip, into the fitted right wall. Rounded corners and a shared
   rim replace the separate apron. Its upper portion remains exposed for
   upward removal.
+  The visible mouth uses independent 5.5 mm corner curves, smoothly connected
+  to the lower lip and lofted into the deeper item cavity. This removes the
+  pinched shoulders from the earlier offset opening.
 
 Overall dimensions are approximately 180 x 98.47 x 20 mm. Edge rounding slightly
 relieves the earlier frame height. The solid mesh volume is approximately
-32.68 cubic centimeters; actual filament use also depends on slicing and support.
+31.22 cubic centimeters; actual filament use also depends on slicing and support.
 
 ## Editing and rebuilding
 
@@ -75,6 +81,8 @@ retention during movement. The proxy corners simplify the actual cases
 (battery R4, perfume lower section R3, Touchland R6 mm).
 An independent solid intersection probe also verifies that the 15 mm central
 perfume opening contains no shelf or retaining material above the backing.
+Another probe confirms the mirrored rear perfume panels are absent through
+both the shell and backing.
 
 ## Printing
 
@@ -94,10 +102,10 @@ The headless Cura result is a geometry and support preview, not supplied
 printer-ready G-code. Import the STL into Cura with the printer's profile and
 review its preview before saving the printer file.
 
-The final preview has 100 layers and estimates 4 h 45 min / 48.7 g PLA,
-including 10.4 g support. The deposited skirt and part fit inside the 220 mm
+The final preview has 100 layers and estimates 4 h 35 min / 47.2 g PLA,
+including 10.5 g support. The deposited skirt and part fit inside the 220 mm
 bed. Estimates assume PLA density 1.24 g/cm3. Verified STL SHA-256:
-`EF8CE5F22FA760A844E4E7607DBE6DB0656F04B4C407E8EAE0942049673B22C0`.
+`1A73241B48810239C5E6A68E523E21DCBAB61F6D1FAFE18F8CD40D4E021EF459`.
 
 Inspect the perfume scoop and mouth edges after support removal. Confirm that
 the perfume slides out as a complete case, the battery exits independently,

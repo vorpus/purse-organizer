@@ -58,3 +58,7 @@ material on both outer sides.
 The Touchland lip must flow continuously into its side walls as one curved
 pocket. Perfume support sections must join the backing smoothly without a
 reverse-curled bottom or separate-looking ledge.
+Remove the mirrored rear panels behind the perfume: the purse lining supports
+its back. Keep only the structural connections needed for one printable body.
+Blend each pocket's side walls into its lower lip so the opening itself has
+one continuous silhouette, without steps or overlapping outlines.

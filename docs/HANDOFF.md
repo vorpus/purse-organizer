@@ -8,7 +8,9 @@ pocket concept. Latest feedback requires two organic perfume end cradles with
 the middle completely open through the bottom, thin outer walls, a shorter
 tapered divider, and a lower Touchland lip. The latest refinement narrows the
 perfume opening to 15 mm, removes its reverse bottom return, and makes the
-Touchland lip continuous with the sides. Keep the tested outside fit.
+Touchland lip continuous with the sides. The perfume's mirrored rear panels
+are removed so the purse lining supports it; opening edges must blend smoothly
+from side walls into lower lips. Keep the tested outside fit.
 See [production notes](PRODUCTION.md) and the production build commands in
 the README. The earlier sections below record the initial scan handoff.
 

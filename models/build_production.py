@@ -76,7 +76,7 @@ def make_backing():
     backing = extrude_xy("Shared backing with three leather windows",
                          rounded_rectangle(-87, 87, -47, 47, 8), 0, BACK_THICKNESS)
     windows = [(-76, 18, -40, 15, 7), (32, 79, -40, 42, 7),
-               (-59, -1, 27, 44, 5), (-82, -77, 26, 43, 2.4),
+               (-64, 3.6, 23.4, 46, .6), (-82, -77, 26, 43, 2.4),
                (-73, -68, 26, 43, 2.4), (10, 15, 26, 43, 2.4),
                (19, 24, 26, 43, 2.4)]
     for bounds in windows:
@@ -162,12 +162,22 @@ def perfume_capsule_halves():
             j = (i+1) % len(first)
             faces.append((first[i], first[j], second[j], second[i]))
     outer = frame_v2.make_mesh("Continuous pill cradle shell", faces)
-    outline = rounded_rectangle(23.4, 65, 1.2, 18.4, 3, 32)
-    cut_rings = [[(x, y, z) for y, z in outline] for x in (-64, 3.6)]
-    faces = [cut_rings[0], cut_rings[1]]
-    for i in range(len(outline)):
-        j = (i+1) % len(outline)
-        faces.append((cut_rings[0][i], cut_rings[0][j], cut_rings[1][j], cut_rings[1][i]))
+    # Open through the rear: the leather supports the item, rather than a
+    # second capsule-shaped back wall. An outward inner fillet softens the
+    # side-to-front opening without consuming the tested item clearance.
+    cut_rings = []
+    for i in range(129):
+        z = -3+21.4*i/128
+        bottom = 23.4 if z <= 15.4 else 26.4-math.sqrt(max(0, 9-(z-15.4)**2))
+        fillet = 0 if z <= 17.8 else .6-math.sqrt(max(0, .36-(z-17.8)**2))
+        xmin, xmax = -64-fillet, 3.6+fillet
+        cut_rings.append([(xmin, bottom, z), (xmax, bottom, z),
+                          (xmax, 65, z), (xmin, 65, z)])
+    faces = [cut_rings[0], cut_rings[-1]]
+    for first, second in zip(cut_rings, cut_rings[1:]):
+        for i in range(4):
+            j = (i+1) % 4
+            faces.append((first[i], first[j], second[j], second[i]))
     cavity = frame_v2.make_mesh("Perfume rounded inner cavity", faces)
     boolean(outer, cavity, "DIFFERENCE")
     bpy.data.objects.remove(cavity, do_unlink=True)
@@ -204,41 +214,56 @@ def perfume_capsule_halves():
 
 
 def continuous_touch_shell():
-    # One shared-vertex sweep from divider, around the lower pocket, into
-    # the fitted right wall. Its convex underside flows directly into back.
+    # The fitted rear cavity and the visible front mouth have separate paths.
+    # A broad R5.5 front corner avoids collapsing the mouth at the side/lip join.
     path = []
     for i in range(49):
-        path.append((26.6, 17-55.7*i/48, -1, 0))
+        t = i/48
+        path.append((26.6, 17-55.7*t, -1, 0, 27.42, 17-51*t))
     for i in range(1, 33):
         a = math.pi+i*math.pi/64
-        path.append((33.2+6.6*math.cos(a), -38.7+6.6*math.sin(a), math.cos(a), math.sin(a)))
+        path.append((33.2+6.6*math.cos(a), -38.7+6.6*math.sin(a), math.cos(a), math.sin(a),
+                     32.92+5.5*math.cos(a), -34+5.5*math.sin(a)))
     for i in range(1, 97):
-        path.append((33.2+(81-33.2)*i/96, -45.3, 0, -1))
+        t = i/96
+        path.append((33.2+(81-33.2)*t, -45.3, 0, -1,
+                     32.92+(81.28-32.92)*t, -39.5-.5*math.sin(math.pi*t)**2))
     for i in range(1, 33):
         a = 1.5*math.pi+i*math.pi/64
-        path.append((81+6.6*math.cos(a), -38.7+6.6*math.sin(a), math.cos(a), math.sin(a)))
+        path.append((81+6.6*math.cos(a), -38.7+6.6*math.sin(a), math.cos(a), math.sin(a),
+                     81.28+5.5*math.cos(a), -34+5.5*math.sin(a)))
     for i in range(1, 65):
-        path.append((87.6, -38.7+77.7*i/64, 1, 0))
+        t = i/64
+        path.append((87.6, -38.7+77.7*t, 1, 0, 86.78, -34+73*t))
     rings = []
-    for x, y, nx, ny in path:
-        downward = abs(ny)
-        thickness = 2+1.5*downward
-        front_rise = .82+(5.5-1.0*math.exp(-((x-55.7)/13)**2))*downward
+    for x, y, nx, ny, fx, fy in path:
+        thickness = 2+1.5*ny*ny
         depth = 20
         if nx < -.99 and y > -5:
             depth = 1.2+18.8*math.cos(min((y+5)/22, 1)*math.pi/2)**2
         if nx > .99 and y > 31:
             depth = 1.2+18.8*math.cos(min((y-31)/8, 1)*math.pi/2)**2
-        section = [(0, 1.2), (0, 18)]
+        ring = [(x, y, 1.2), (x, y, 18)]
         for i in range(1, 17):
             a = -math.pi/2+i*math.pi/32
-            section.append((.8+.8*math.sin(a), 18+.8*math.cos(a)))
-        section.extend(((front_rise, 18.8), (front_rise, 20), (.8, 20)))
+            d = .8+.8*math.sin(a)
+            ring.append((x-nx*d, y-ny*d, 18+.8*math.cos(a)))
+        bx, by = x-nx*.8, y-ny*.8
+        vx, vy = fx-bx, fy-by
+        length = math.hypot(vx, vy)
+        vx, vy = vx/length, vy/length
+        rim_radius = min(.4, length/2)
+        for i in range(17):
+            a = -math.pi/2+i*math.pi/16
+            d = rim_radius*(math.cos(a)-1)
+            ring.append((fx+vx*d, fy+vy*d, 19.4+.6*math.sin(a)))
+        ring.append((bx, by, 20))
         for i in range(1, 17):
             a = -i*math.pi/32
-            section.append((.8+(thickness+.8)*math.sin(a), 18+2*math.cos(a)))
-        section.append((-thickness, 0))
-        rings.append([(x-nx*d, y-ny*d, z*depth/20) for d, z in section])
+            d = .8+(thickness+.8)*math.sin(a)
+            ring.append((x-nx*d, y-ny*d, 18+2*math.cos(a)))
+        ring.append((x+nx*thickness, y+ny*thickness, 0))
+        rings.append([(px, py, z*depth/20) for px, py, z in ring])
     faces = [rings[0], rings[-1]]
     for first, second in zip(rings, rings[1:]):
         for i in range(len(first)):

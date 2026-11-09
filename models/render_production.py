@@ -105,7 +105,7 @@ def render(name, target, eye, span):
 
 
 render("production-angle.png", (0, 0, .007), (.025, -.10, .32), .225)
-render("production-thumb-scoop.png", (-.0302, .034, .01), (-.025, -.065, .24), .095)
+render("production-thumb-scoop.png", (-.0302, .034, .01), (-.025, .14, .22), .095)
 
 # Rounded item envelopes illustrate access; they are never saved into the CAD file.
 for name, dimensions, center, color in (
