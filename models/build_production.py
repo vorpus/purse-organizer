@@ -18,9 +18,10 @@ import frame_v2
 BACK_THICKNESS = 1.2
 ITEM_BACK = 1.5
 PERFUME_CENTER_X = -30.2
-PERFUME_THUMB_WIDTH = 15.0
+PERFUME_THUMB_WIDTH = 25.0
 PERFUME_CHANNEL_BASE = 23.4
 PERFUME_APRON_TOP = 41.0
+PERFUME_FRONT_TOP = 33.7
 ITEMS = (
     ("Anker 622", (105.0, 67.0, 13.0), (-29.5, -12.7)),
     ("Perfume", (66.4, 25.3, 16.2), (-30.2, 36.65)),
@@ -76,7 +77,7 @@ def make_backing():
     backing = extrude_xy("Shared backing with three leather windows",
                          rounded_rectangle(-87, 87, -47, 47, 8), 0, BACK_THICKNESS)
     windows = [(-76, 18, -40, 15, 7), (32, 79, -40, 42, 7),
-               (-64, 3.6, 23.4, 46, .6), (-82, -77, 26, 43, 2.4),
+               (-64, 3.6, 23.4, 46, 7), (-82, -77, 26, 43, 2.4),
                (-73, -68, 26, 43, 2.4), (10, 15, 26, 43, 2.4),
                (19, 24, 26, 43, 2.4)]
     for bounds in windows:
@@ -92,16 +93,10 @@ def make_backing():
     return backing
 
 
-def scallop(x, center, width, low, high):
-    t = min(abs(x-center)/(width/2), 1)
-    return low + (high-low)*math.sin(t*math.pi/2)**2
-
-
-def front_curb(name, xmin, xmax, ymin, zmin, zmax, top_function):
-    outline = [(xmin, ymin), (xmax, ymin)]
-    outline += [(xmax-(xmax-xmin)*i/96, top_function(xmax-(xmax-xmin)*i/96))
-                for i in range(97)]
-    return extrude_xy(name, outline, zmin, zmax)
+def wall_depth(y):
+    """Shared depth profile for left outer wall, divider, and right outer wall."""
+    t = max(0, min((y+5)/22, 1))
+    return 1.2+18.8*math.cos(t*math.pi/2)**2
 
 
 def build_frame():
@@ -109,11 +104,10 @@ def build_frame():
     perimeter = frame_v2.perimeter()
     # Preserve the fitted XY outline while rolling the open upper ends down
     # to the rear rim, instead of terminating the tall side walls abruptly.
-    outline = [(31, 25), (51, 25), (51, 1.2), (39, 1.2)]
+    outline = [(-5, 25), (51, 25), (51, 1.2), (17, 1.2)]
     for i in range(1, 49):
-        y = 39-8*i/48
-        t = (y-31)/8
-        outline.append((y, 1.2+18.8*math.cos(t*math.pi/2)**2))
+        y = 17-22*i/48
+        outline.append((y, wall_depth(y)))
     rings = [[(x, y, z) for y, z in outline] for x in (-95, 95)]
     faces = [rings[0], rings[1]]
     for i in range(len(outline)):
@@ -181,6 +175,18 @@ def perfume_capsule_halves():
     cavity = frame_v2.make_mesh("Perfume rounded inner cavity", faces)
     boolean(outer, cavity, "DIFFERENCE")
     bpy.data.objects.remove(cavity, do_unlink=True)
+    # Lower the front mouth to the outer side rim (Y33.7 at the front plane),
+    # continuing across the side caps so no raised tips remain.
+    profile = [(50, -2), (50, 22), (PERFUME_FRONT_TOP, 22),
+               (PERFUME_FRONT_TOP, -2)]
+    cut_rings = [[(x, y, z) for y, z in profile] for x in (-70, 10)]
+    faces = [cut_rings[0], cut_rings[1]]
+    for i in range(len(profile)):
+        j = (i+1) % len(profile)
+        faces.append((cut_rings[0][i], cut_rings[0][j], cut_rings[1][j], cut_rings[1][i]))
+    trim = frame_v2.make_mesh("Lower flowing perfume front rim", faces)
+    boolean(outer, trim, "DIFFERENCE")
+    bpy.data.objects.remove(trim, do_unlink=True)
     halves = []
     for name, xmin, xmax in (("Perfume left pill cradle", -70, PERFUME_CENTER_X-PERFUME_THUMB_WIDTH/2),
                             ("Perfume right pill cradle", PERFUME_CENTER_X+PERFUME_THUMB_WIDTH/2, 10)):
@@ -191,13 +197,14 @@ def perfume_capsule_halves():
         trim = box("Half shell trim", (xmin, 15, -1), (xmax, 50, 22))
         boolean(half, trim, "INTERSECT")
         bpy.data.objects.remove(trim, do_unlink=True)
-        # Roll only the exposed central cut rim, preserving the cavity volume.
+        # Soften the exposed central cut and lowered mouth rim locally.
         cut_x = xmax if "left" in name else xmin
         bm = bmesh.new()
         bm.from_mesh(half.data)
         weights = bm.edges.layers.float.new("bevel_weight_edge")
         for edge in bm.edges:
-            if all(abs(v.co.x-cut_x) < 1e-4 for v in edge.verts) and edge.is_manifold:
+            if edge.is_manifold and (all(abs(v.co.x-cut_x) < 1e-4 for v in edge.verts) or
+                                     all(abs(v.co.y-PERFUME_FRONT_TOP) < 1e-4 for v in edge.verts)):
                 if edge.calc_face_angle() > .15:
                     edge[weights] = 1
         bm.to_mesh(half.data)
@@ -213,71 +220,28 @@ def perfume_capsule_halves():
     return halves
 
 
-def continuous_touch_shell():
-    # The fitted rear cavity and the visible front mouth have separate paths.
-    # A broad R5.5 front corner avoids collapsing the mouth at the side/lip join.
-    path = []
-    for i in range(49):
-        t = i/48
-        path.append((26.6, 17-55.7*t, -1, 0, 27.42, 17-51*t))
-    for i in range(1, 33):
-        a = math.pi+i*math.pi/64
-        path.append((33.2+6.6*math.cos(a), -38.7+6.6*math.sin(a), math.cos(a), math.sin(a),
-                     32.92+5.5*math.cos(a), -34+5.5*math.sin(a)))
-    for i in range(1, 97):
-        t = i/96
-        path.append((33.2+(81-33.2)*t, -45.3, 0, -1,
-                     32.92+(81.28-32.92)*t, -39.5-.5*math.sin(math.pi*t)**2))
-    for i in range(1, 33):
-        a = 1.5*math.pi+i*math.pi/64
-        path.append((81+6.6*math.cos(a), -38.7+6.6*math.sin(a), math.cos(a), math.sin(a),
-                     81.28+5.5*math.cos(a), -34+5.5*math.sin(a)))
-    for i in range(1, 65):
-        t = i/64
-        path.append((87.6, -38.7+77.7*t, 1, 0, 86.78, -34+73*t))
-    rings = []
-    for x, y, nx, ny, fx, fy in path:
-        thickness = 2+1.5*ny*ny
-        depth = 20
-        if nx < -.99 and y > -5:
-            depth = 1.2+18.8*math.cos(min((y+5)/22, 1)*math.pi/2)**2
-        if nx > .99 and y > 31:
-            depth = 1.2+18.8*math.cos(min((y-31)/8, 1)*math.pi/2)**2
-        ring = [(x, y, 1.2), (x, y, 18)]
-        for i in range(1, 17):
-            a = -math.pi/2+i*math.pi/32
-            d = .8+.8*math.sin(a)
-            ring.append((x-nx*d, y-ny*d, 18+.8*math.cos(a)))
-        bx, by = x-nx*.8, y-ny*.8
-        vx, vy = fx-bx, fy-by
-        length = math.hypot(vx, vy)
-        vx, vy = vx/length, vy/length
-        rim_radius = min(.4, length/2)
-        for i in range(17):
-            a = -math.pi/2+i*math.pi/16
-            d = rim_radius*(math.cos(a)-1)
-            ring.append((fx+vx*d, fy+vy*d, 19.4+.6*math.sin(a)))
-        ring.append((bx, by, 20))
-        for i in range(1, 17):
-            a = -i*math.pi/32
-            d = .8+(thickness+.8)*math.sin(a)
-            ring.append((x-nx*d, y-ny*d, 18+2*math.cos(a)))
-        ring.append((x+nx*thickness, y+ny*thickness, 0))
-        rings.append([(px, py, z*depth/20) for px, py, z in ring])
-    faces = [rings[0], rings[-1]]
-    for first, second in zip(rings, rings[1:]):
-        for i in range(len(first)):
-            j = (i+1) % len(first)
-            faces.append((first[i], first[j], second[j], second[i]))
-    return frame_v2.make_mesh("Continuous Touchland cradle and divider", faces)
+def straight_divider():
+    # Straight in XY all the way to the frame bottom, with no front return.
+    outline = [(-48, 0), (17, 0)]
+    for i in range(97):
+        y = 17-65*i/96
+        outline.append((y, wall_depth(y)))
+    rings = [[(x, y, z) for y, z in outline] for x in (24.6, 26.6)]
+    faces = [rings[0], rings[1]]
+    for i in range(len(outline)):
+        j = (i+1) % len(outline)
+        faces.append((rings[0][i], rings[0][j], rings[1][j], rings[1][i]))
+    obj = frame_v2.make_mesh("Straight thin divider", faces)
+    bpy.context.view_layer.objects.active = obj
+    bevel = obj.modifiers.new("Soft divider contact edges", "BEVEL")
+    bevel.width = .35
+    bevel.segments = 4
+    bpy.ops.object.modifier_apply(modifier=bevel.name)
+    return obj
 
 
 def build_organizer():
-    parts = [continuous_touch_shell(),
-             front_curb("Low battery front curb", -83.2, 24.8, -48, 14.9, 16.1,
-                        lambda x: scallop(x, -29.5, 54, -46.4, -45.2))]
-    parts.extend(perfume_capsule_halves())
-    return parts
+    return [straight_divider(), *perfume_capsule_halves()]
 
 
 def move_to(obj, collection):
@@ -414,7 +378,7 @@ def build():
     print("PRODUCTION VERIFIED", tuple(round(d, 4) for d in result.dimensions),
           "volume mm3", round(volume, 2), "triangles", len(result.data.polygons))
     print("PERFUME THUMB CHANNEL", PERFUME_THUMB_WIDTH, "mm clear through floor; end seats Y",
-          PERFUME_CHANNEL_BASE, "side top Y", PERFUME_APRON_TOP)
+          PERFUME_CHANNEL_BASE, "front top Y", PERFUME_FRONT_TOP)
 
 
 if __name__ == "__main__":

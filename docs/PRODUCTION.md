@@ -13,7 +13,7 @@ frame. The revised retention and thumb access still need checking in the print.
 - The accepted 2 mm rear inset and 5 mm taper length are retained. Corner curves
   are finer and contact edges have a 0.2 mm relief.
 - The perfume remains horizontal above the battery, with its broad face
-  parallel to the backing. Two curved end cradles support it. A centered 15 mm
+  parallel to the backing. Two curved end cradles support it. A centered 25 mm
   gap removes the entire middle, including the bottom supports. The backing
   opening extends below the gap so no central bridge obstructs the thumb.
   The longer halves follow a capsule contour and join the backing without an
@@ -21,28 +21,30 @@ frame. The revised retention and thumb access still need checking in the print.
   Rear panels that mirrored the front retainers are removed, together with
   the matching backing area. The purse lining supports the item from behind;
   small end connections keep the cradles attached to the frame.
+  Rear-opening corners have a 7 mm radius. The front rim is lowered from Y41
+  to Y33.7 to meet the side rim. The side-cap tips are lowered to the same
+  level, with rounded contact edges.
 - The thick junction fill and duplicate outer guide walls are removed. Outer
-  sides use the fitted 2.4 mm frame wall alone. Their upper ends roll down to
-  the backing over Y31 to Y39 while retaining the outside XY contour.
+  sides use the fitted 2.4 mm frame wall alone. Both outer walls and the center
+  divider use the same depth taper from Y-5 to Y17. The lower seating contour
+  remains unchanged; the upper outer walls now contact less of the bag.
 - A single 2 mm divider replaces the thick full-height central wall. Its
-  depth tapers smoothly down to the backing by Y17.
-- The battery uses the frame bottom and shared backing. Its front curb is low
-  to permit forward tilting below the perfume shelf. Tilt forward about 20
-  degrees, lift 3 mm, then pull forward. A large straight upward lift hits the
-  shelf; excessive tilting can meet the lower curb.
+  depth tapers smoothly down to the backing by Y17. It runs straight to the
+  bottom wall at constant X, with no rightward return.
+- The battery uses the frame bottom and shared backing. The extra lower plate
+  and front curb are removed. Tilt forward about 20 degrees, lift 3 mm, then
+  pull forward. A large straight upward lift can meet the perfume supports.
   Its upper edge has no enclosing wall; only the perfume's two independent
   end supports remain above it.
-- Touchland uses one continuous swept shell from the short divider, around
-  its low front lip, into the fitted right wall. Rounded corners and a shared
-  rim replace the separate apron. Its upper portion remains exposed for
-  upward removal.
-  The visible mouth uses independent 5.5 mm corner curves, smoothly connected
-  to the lower lip and lofted into the deeper item cavity. This removes the
-  pinched shoulders from the earlier offset opening.
+- Touchland's front lip and extra swept floor are removed. It uses the frame
+  bottom and straight divider. Both lower compartments are open toward the
+  front, so out-of-plane retention now depends on the bag and loaded fit.
+  The rounded reference bottle can settle about 1.2 mm below its former
+  position before contacting the frame; actual settling depends on its case.
 
 Overall dimensions are approximately 180 x 98.47 x 20 mm. Edge rounding slightly
 relieves the earlier frame height. The solid mesh volume is approximately
-31.22 cubic centimeters; actual filament use also depends on slicing and support.
+24.21 cubic centimeters; actual filament use also depends on slicing and support.
 
 ## Editing and rebuilding
 
@@ -79,7 +81,7 @@ STL: perfume and Touchland translate upward 60 mm; the battery tilts forward
 nominal geometric clearance, not real friction, flexible-wall behavior, or
 retention during movement. The proxy corners simplify the actual cases
 (battery R4, perfume lower section R3, Touchland R6 mm).
-An independent solid intersection probe also verifies that the 15 mm central
+An independent solid intersection probe also verifies that the 25 mm central
 perfume opening contains no shelf or retaining material above the backing.
 Another probe confirms the mirrored rear perfume panels are absent through
 both the shell and backing.
@@ -88,7 +90,7 @@ both the shell and backing.
 
 Use the backing flat on the bed with pockets facing upward, as exported.
 The target printer is the Ender 3 V3 SE with a 0.4 mm nozzle and PLA.
-The front aprons require support. Support contacts lie inside accessible
+The perfume retainers require support. Support contacts lie inside accessible
 pockets; remove them before inserting the items. Follow the filament maker's
 temperature guidance if it differs from the preview profile.
 
@@ -102,10 +104,11 @@ The headless Cura result is a geometry and support preview, not supplied
 printer-ready G-code. Import the STL into Cura with the printer's profile and
 review its preview before saving the printer file.
 
-The final preview has 100 layers and estimates 4 h 35 min / 47.2 g PLA,
-including 10.5 g support. The deposited skirt and part fit inside the 220 mm
+The final preview has 100 layers and estimates 3 h 4 min / 33.2 g PLA,
+including 2.7 g support, all beneath the perfume. The deposited skirt and part
+fit inside the 220 mm
 bed. Estimates assume PLA density 1.24 g/cm3. Verified STL SHA-256:
-`1A73241B48810239C5E6A68E523E21DCBAB61F6D1FAFE18F8CD40D4E021EF459`.
+`819A78D1E3F5DBA7EFA54C716E1E6198431BF89B26F0D14CBA204DA5BA957A50`.
 
 Inspect the perfume scoop and mouth edges after support removal. Confirm that
 the perfume slides out as a complete case, the battery exits independently,

@@ -2,15 +2,13 @@
 
 ## Current continuation
 
-The user confirmed a good fit from the shared-base V2 test print and requested
-the production model. The production direction follows the approved fitted
-pocket concept. Latest feedback requires two organic perfume end cradles with
-the middle completely open through the bottom, thin outer walls, a shorter
-tapered divider, and a lower Touchland lip. The latest refinement narrows the
-perfume opening to 15 mm, removes its reverse bottom return, and makes the
-Touchland lip continuous with the sides. The perfume's mirrored rear panels
-are removed so the purse lining supports it; opening edges must blend smoothly
-from side walls into lower lips. Keep the tested outside fit.
+The user confirmed a good fit from the shared-base V2 print. Latest revision:
+perfume has an open back with rounded corners, a lowered front rim, and a
+25 mm central opening through the floor. Both lower compartments have no
+front retainers or extra floor/curb; items rest on the frame bottom. The center
+divider runs straight down, and both outer walls match its taper. Lower frame
+seating geometry is preserved; upper outer wall depth is reduced. Revised
+physical retention remains untested.
 See [production notes](PRODUCTION.md) and the production build commands in
 the README. The earlier sections below record the initial scan handoff.
 

@@ -44,21 +44,27 @@ removal easier. The perfume retains only its own two end supports.
 
 Build smooth integrated pockets based on the approved visual concept, with
 solid sides, deliberate openings in the backing, and rounded contact edges.
-Use two curved pill-like end cradles for the perfume, with a 15 mm central gap
-(user requested 10-20 mm). The central thumb gap
+Use two curved pill-like end cradles for the perfume, with a 25 mm central gap
+(increased by 10 mm from the prior 15 mm opening). The central thumb gap
 must remove the bottom shelf as well as the front retainer, leaving no bridge
 under the middle of the perfume. Connect the two cradles through the frame
 and backing so this remains one printable object. Preserve the horizontal perfume
 orientation and its broad face parallel to the organizer back.
 
 Avoid stacked plates, thick junction fills, and redundant inner side walls.
-Use thin flowing shells, a shorter center divider, and a much lower Touchland
-front lip. Preserve the fitted outside contour while reducing unnecessary
-material on both outer sides.
-The Touchland lip must flow continuously into its side walls as one curved
-pocket. Perfume support sections must join the backing smoothly without a
+Use thin flowing shells and a shorter center divider. Preserve the fitted
+lower outside contour while reducing unnecessary material on both outer sides.
+Perfume support sections must join the backing smoothly without a
 reverse-curled bottom or separate-looking ledge.
 Remove the mirrored rear panels behind the perfume: the purse lining supports
 its back. Keep only the structural connections needed for one printable body.
-Blend each pocket's side walls into its lower lip so the opening itself has
+Blend the perfume's side walls into its lower lip so the opening itself has
 one continuous silhouette, without steps or overlapping outlines.
+Round the top compartment's rear opening consistently with the other pockets,
+and lower its front rim to meet the side walls. Remove excess material beneath
+the right pocket. Both outer walls must use the center divider's taper profile.
+
+Latest lower-compartment revision supersedes the continuous front-lip design:
+remove the right pocket's front lip and the battery's extra lower plate/curb.
+Both items use the frame bottom. Extend the center divider straight down to
+the bottom wall, without curving toward the right.
