@@ -72,3 +72,10 @@ the bottom wall, without curving toward the right.
 Raise the perfume side walls by 3 mm while keeping the front retainers the
 same size and keeping the compartment at its existing position. The proposed
 2 mm downward move was cancelled to preserve battery clearance.
+
+Latest print feedback: perfume retention is insufficient and the cradle can
+break off while removing supports. Revise the pocket down 1 mm, raise its
+front wall 1 mm relative to the pocket, and extend its depth outward 1 mm.
+Replace thin tapered rear attachments with thicker right-angle roots and
+smooth reinforcing transitions on both sides. Preserve the open rear and
+center thumb gap; recheck battery clearance and support access.

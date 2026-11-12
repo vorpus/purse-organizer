@@ -110,7 +110,7 @@ render("production-thumb-scoop.png", (-.0302, .034, .01), (-.025, .14, .22), .09
 # Rounded item envelopes illustrate access; they are never saved into the CAD file.
 for name, dimensions, center, color in (
     ("Battery reference", (105, 67, 13), (-29.5, -12.7, 8), (.12, .17, .21)),
-    ("Perfume reference", (66.4, 25.3, 16.2), (-30.2, 36.65, 9.6), (.75, .69, .54)),
+    ("Perfume reference", (66.4, 25.3, 16.2), (-30.2, 35.65, 9.6), (.75, .69, .54)),
     ("Touchland reference", (55, 95, 17), (55.7, 2.5, 10), (.3, .52, .4)),
 ):
     bpy.ops.mesh.primitive_cube_add(size=1, location=Vector(center)*.001)

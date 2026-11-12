@@ -2,7 +2,9 @@
 
 The user reported a good fit from the shared-base V2 print and approved the
 fitted-pocket concept. This model develops those pockets around the tested
-frame. The revised retention and thumb access still need checking in the print.
+frame. The subsequent print exposed insufficient perfume retention and weak
+rear attachments during support removal. This revision reinforces those roots;
+its retention and support-removal strength still need physical confirmation.
 
 ## Geometry and access
 
@@ -20,11 +22,15 @@ frame. The revised retention and thumb access still need checking in the print.
   exposed reverse return or a separate projecting end plate.
   Rear panels that mirrored the front retainers are removed, together with
   the matching backing area. The purse lining supports the item from behind;
-  small end connections keep the cradles attached to the frame.
-  Rear-opening corners have a 7 mm radius. The front rim is lowered from Y41
-  to Y33.7. The side walls rise 3 mm higher, to Y36.7, and blend down into
-  the unchanged front rim. The compartment, supports, and item position have
-  not moved downward; the 2 mm lowering proposal was cancelled.
+  reinforced end connections keep the cradles attached to the frame.
+  Rear-opening corners have a 7 mm radius. Following print feedback, the
+  pocket and item reference move down 1 mm. The front wall gains 1 mm of
+  height relative to the pocket floor: its global top stays Y33.7, while
+  the side rim is now Y35.7. Cavity and outer depth both increase 1 mm;
+  the inner front is Z19.4 and the outer front reaches Z21.
+  Each end has a 3 mm-wide square root extending 6 mm forward, a local
+  6 x 14.5 x 3 mm landing, and R3 reinforcing fillets on both sides. The
+  back remains flat at Z0. These replace the narrow tapered rear connection.
 - The thick junction fill and duplicate outer guide walls are removed. Outer
   sides use the fitted 2.4 mm frame wall alone. Both outer walls and the center
   divider use the same depth taper from Y-5 to Y17. The lower seating contour
@@ -33,8 +39,8 @@ frame. The revised retention and thumb access still need checking in the print.
   depth tapers smoothly down to the backing by Y17. It runs straight to the
   bottom wall at constant X, with no rightward return.
 - The battery uses the frame bottom and shared backing. The extra lower plate
-  and front curb are removed. Tilt forward about 20 degrees, lift 3 mm, then
-  pull forward. A large straight upward lift can meet the perfume supports.
+  and front curb are removed. Pull forward to remove it; the lowered perfume
+  supports reduce the clearance available for tilting upward.
   Its upper edge has no enclosing wall; only the perfume's two independent
   end supports remain above it.
 - Touchland's front lip and extra swept floor are removed. It uses the frame
@@ -43,9 +49,9 @@ frame. The revised retention and thumb access still need checking in the print.
   The rounded reference bottle can settle about 1.2 mm below its former
   position before contacting the frame; actual settling depends on its case.
 
-Overall dimensions are approximately 180 x 98.47 x 20 mm. Edge rounding slightly
+Overall dimensions are approximately 180 x 98.47 x 21 mm. Edge rounding slightly
 relieves the earlier frame height. The solid mesh volume is approximately
-24.33 cubic centimeters; actual filament use also depends on slicing and support.
+25.37 cubic centimeters; actual filament use also depends on slicing and support.
 
 ## Editing and rebuilding
 
@@ -77,8 +83,9 @@ again, along with dimensions and volume. Contact rounding is constructed on
 source geometry, before the final union, to preserve a clean STL.
 
 Removal checks sample rounded dimensional item proxies against the exported
-STL: perfume and Touchland translate upward 60 mm; the battery tilts forward
-20 degrees, lifts 3 mm, then translates forward 40 mm. These checks establish
+STL: perfume and Touchland translate upward 60 mm; the battery translates
+straight forward 40 mm without tilting. The former tilt-first path
+now collides with the lowered perfume cradle and must not be used. These checks establish
 nominal geometric clearance, not real friction, flexible-wall behavior, or
 retention during movement. The proxy corners simplify the actual cases
 (battery R4, perfume lower section R3, Touchland R6 mm).
@@ -86,6 +93,9 @@ An independent solid intersection probe also verifies that the 25 mm central
 perfume opening contains no shelf or retaining material above the backing.
 Another probe confirms the mirrored rear perfume panels are absent through
 both the shell and backing.
+Each reinforced attachment was probed independently: fully solid root cores
+of at least 2.8 x 13.7 x 5.8 mm and landing cores of 5.4 x 13.7 x 2.5 mm
+remain after the union. This verifies geometry, not fracture strength.
 
 ## Printing
 
@@ -96,8 +106,9 @@ pockets; remove them before inserting the items. Follow the filament maker's
 temperature guidance if it differs from the preview profile.
 
 Preview slicing uses 0.2 mm layers, three walls, four top/bottom layers,
-10% cubic infill, normal support Everywhere at 45 degrees, 20% support density,
-support interface enabled, and a 0.2 mm support Z gap. PLA temperatures are
+10% cubic infill, normal support Everywhere at 45 degrees, 17% zigzag support
+(2.35294 mm line spacing), zero support walls, and a 0.2 mm support Z gap.
+The support interface uses 33.3% density and 0.8 mm thickness. PLA temperatures are
 200 C nozzle / 60 C bed. Speeds are 60 mm/s print, 35 outer wall, 50 inner wall,
 35 skin, 45 support, 30 support interface, and 20 first layer.
 
@@ -105,11 +116,11 @@ The headless Cura result is a geometry and support preview, not supplied
 printer-ready G-code. Import the STL into Cura with the printer's profile and
 review its preview before saving the printer file.
 
-The final preview has 100 layers and estimates 3 h 3 min / 32.9 g PLA,
-including 2.3 g support, all beneath the perfume. The deposited skirt and part
+The final preview estimates 3 h 12 min / 34.1 g PLA,
+including 2.6 g support, all beneath the perfume. The deposited skirt and part
 fit inside the 220 mm
 bed. Estimates assume PLA density 1.24 g/cm3. Verified STL SHA-256:
-`67370E8B55A197E9DA9C44E823C302C827070E35E4E8ABE066B6F0E7B2F57F54`.
+`2E11604B4771A060E462AB273193100634A6427C08AEB790AABE1A74D1145D6F`.
 
 Inspect the perfume scoop and mouth edges after support removal. Confirm that
 the perfume slides out as a complete case, the battery exits independently,

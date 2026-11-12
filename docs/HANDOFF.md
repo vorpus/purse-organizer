@@ -9,8 +9,11 @@ front retainers or extra floor/curb; items rest on the frame bottom. The center
 divider runs straight down, and both outer walls match its taper. Lower frame
 seating geometry is preserved; upper outer wall depth is reduced. Revised
 physical retention remains untested.
-The perfume side walls are raised 3 mm; front size and compartment position
-are retained. The user cancelled the proposed 2 mm downward move.
+Latest physical feedback: perfume retention was insufficient and its rear
+connection fractured during support removal. The new revision moves it down
+1 mm, adds 1 mm front height relative to the pocket and 1 mm outward depth,
+and adds thicker square roots, local backing landings, and rounded gussets.
+The earlier 2 mm downward move remains cancelled; this is a new 1 mm request.
 See [production notes](PRODUCTION.md) and the production build commands in
 the README. The earlier sections below record the initial scan handoff.
 

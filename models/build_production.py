@@ -21,11 +21,12 @@ PERFUME_CENTER_X = -30.2
 PERFUME_THUMB_WIDTH = 25.0
 PERFUME_CHANNEL_BASE = 23.4
 PERFUME_APRON_TOP = 41.0
-PERFUME_FRONT_TOP = 33.7
-PERFUME_SIDE_TOP = PERFUME_FRONT_TOP+3.0
+PERFUME_FRONT_TOP = 34.7
+PERFUME_SIDE_TOP = 36.7
+PERFUME_SHIFT_Y = -1.0
 ITEMS = (
     ("Anker 622", (105.0, 67.0, 13.0), (-29.5, -12.7)),
-    ("Perfume", (66.4, 25.3, 16.2), (-30.2, 36.65)),
+    ("Perfume", (66.4, 25.3, 16.2), (-30.2, 35.65)),
     ("Touchland", (55.0, 95.0, 17.0), (55.7, 2.5)),
 )
 
@@ -78,7 +79,7 @@ def make_backing():
     backing = extrude_xy("Shared backing with three leather windows",
                          rounded_rectangle(-87, 87, -47, 47, 8), 0, BACK_THICKNESS)
     windows = [(-76, 18, -40, 15, 7), (32, 79, -40, 42, 7),
-               (-64, 3.6, 23.4, 46, 7), (-82, -77, 26, 43, 2.4),
+               (-64, 3.6, 22.4, 45, 7), (-82, -77, 26, 43, 2.4),
                (-73, -68, 26, 43, 2.4), (10, 15, 26, 43, 2.4),
                (19, 24, 26, 43, 2.4)]
     for bounds in windows:
@@ -88,7 +89,7 @@ def make_backing():
     thumb = extrude_xy("Backing opening under perfume thumb gap",
                        rounded_rectangle(PERFUME_CENTER_X-PERFUME_THUMB_WIDTH/2,
                                          PERFUME_CENTER_X+PERFUME_THUMB_WIDTH/2,
-                                         20.8, 45, 3), -1, 3)
+                                         19.8, 44, 3), -1, 3)
     boolean(backing, thumb, "DIFFERENCE")
     bpy.data.objects.remove(thumb, do_unlink=True)
     return backing
@@ -125,31 +126,63 @@ def build_frame():
     return [perimeter, make_backing()]
 
 
+def root_fillet(name, x, direction, base):
+    radius = 3.0
+    profile = [(x, base), (x+direction*radius, base)]
+    for i in range(1, 33):
+        angle = i*math.pi/64
+        profile.append((x+direction*radius*(1-math.sin(angle)),
+                        base+radius*(1-math.cos(angle))))
+    rings = [[(px, y, z) for px, z in profile] for y in (22.2, PERFUME_SIDE_TOP)]
+    faces = [rings[0], rings[1]]
+    for i in range(len(profile)):
+        j = (i+1) % len(profile)
+        faces.append((rings[0][i], rings[0][j], rings[1][j], rings[1][i]))
+    return frame_v2.make_mesh(name, faces)
+
+
+def reinforced_root(side):
+    # 3 mm square root on a 3 mm-thick local landing, not a thin rear neck.
+    # The inner R3 fillet fits behind the item: at Z1.5 its reach is 0.402 mm,
+    # less than the 0.6 mm lateral case clearance. Rear plane remains Z0.
+    if side == "left":
+        low, high, pad_low, pad_high = -67, -64, -70, -64
+        outer_x, outer_direction, inner_x, inner_direction = -67, -1, -64, 1
+    else:
+        low, high, pad_low, pad_high = 3.6, 6.6, 3.6, 9.6
+        outer_x, outer_direction, inner_x, inner_direction = 6.6, 1, 3.6, -1
+    return [box(side+" 3mm anchor landing", (pad_low, 22.2, 0),
+                (pad_high, PERFUME_SIDE_TOP, 3), .4),
+            box(side+" square end root", (low, 22.2, 0), (high, PERFUME_SIDE_TOP, 6)),
+            root_fillet(side+" outer R3 root gusset", outer_x, outer_direction, 3),
+            root_fillet(side+" inner R3 root gusset", inner_x, inner_direction, 0)]
+
+
 def perfume_capsule_halves():
     def rim_height(z):
-        t = max(0, min((z-14.4)/4, 1))
+        t = max(0, min((z-15.4)/4, 1))
         return PERFUME_FRONT_TOP+(PERFUME_SIDE_TOP-PERFUME_FRONT_TOP)*math.cos(t*math.pi/2)**2
 
     rings = []
     for i in range(65):
-        z = 20*i/64
+        z = 21*i/64
         if z < 4.2:
             ymin = 26.4-4.2*math.sqrt(max(0, 1-((z-4.2)/4.2)**2))
-        elif z > 15.4:
-            ymin = 26.4-4.2*math.sqrt(max(0, 1-((z-15.4)/4.6)**2))
+        elif z > 16.4:
+            ymin = 26.4-4.2*math.sqrt(max(0, 1-((z-16.4)/4.6)**2))
         else:
             ymin = 22.2
         radius = (PERFUME_APRON_TOP-ymin)/2-.01
         # Retain the front/rear pill silhouette while providing enough exterior
         # material around the conservative square-ended item cavity. This only
         # thickens the two lower end corners; the inner fit stays unchanged.
-        face_blend = max(0, 1-z/1.2, (z-18.4)/1.6)
+        face_blend = max(0, 1-z/1.2, (z-19.4)/1.6)
         bottom_radius = 3+(radius-3)*face_blend
         outline = []
-        corners = ((5.6-radius, PERFUME_APRON_TOP-radius, radius),
-                   (-66+radius, PERFUME_APRON_TOP-radius, radius),
-                   (-66+bottom_radius, ymin+bottom_radius, bottom_radius),
-                   (5.6-bottom_radius, ymin+bottom_radius, bottom_radius))
+        corners = ((6.6-radius, PERFUME_APRON_TOP-radius, radius),
+                   (-67+radius, PERFUME_APRON_TOP-radius, radius),
+                   (-67+bottom_radius, ymin+bottom_radius, bottom_radius),
+                   (6.6-bottom_radius, ymin+bottom_radius, bottom_radius))
         for corner, (cx, cy, r) in enumerate(corners):
             for step in range(33):
                 a = (corner+step/32)*math.pi/2
@@ -166,9 +199,9 @@ def perfume_capsule_halves():
     # side-to-front opening without consuming the tested item clearance.
     cut_rings = []
     for i in range(129):
-        z = -3+21.4*i/128
-        bottom = 23.4 if z <= 15.4 else 26.4-math.sqrt(max(0, 9-(z-15.4)**2))
-        fillet = 0 if z <= 17.8 else .6-math.sqrt(max(0, .36-(z-17.8)**2))
+        z = -3+22.4*i/128
+        bottom = 23.4 if z <= 16.4 else 26.4-math.sqrt(max(0, 9-(z-16.4)**2))
+        fillet = 0 if z <= 18.8 else .6-math.sqrt(max(0, .36-(z-18.8)**2))
         xmin, xmax = -64-fillet, 3.6+fillet
         cut_rings.append([(xmin, bottom, z), (xmax, bottom, z),
                           (xmax, 65, z), (xmin, 65, z)])
@@ -180,10 +213,10 @@ def perfume_capsule_halves():
     cavity = frame_v2.make_mesh("Perfume rounded inner cavity", faces)
     boolean(outer, cavity, "DIFFERENCE")
     bpy.data.objects.remove(cavity, do_unlink=True)
-    # Taller sides flow into the unchanged front retainer. The entire front
-    # slab from Z18.4 onward keeps its original Y33.7 rim and dimensions.
+    # The front is 1 mm taller locally; after the 1 mm downward translation
+    # its world rim remains Y33.7. Cavity and outer front both extend by 1 mm.
     profile = [(50, -2), (50, 22), (PERFUME_FRONT_TOP, 22)]
-    rim_stations = sorted({20-20*i/80 for i in range(81)} | {14.4, 18.4}, reverse=True)
+    rim_stations = sorted({21-21*i/84 for i in range(85)} | {15.4, 19.4}, reverse=True)
     for z in rim_stations:
         profile.append((rim_height(z), z))
     profile.append((PERFUME_SIDE_TOP, -2))
@@ -223,6 +256,10 @@ def perfume_capsule_halves():
         bevel.width = .35
         bevel.segments = 4
         bpy.ops.object.modifier_apply(modifier=bevel.name)
+        for reinforcement in reinforced_root("left" if "left" in name else "right"):
+            boolean(half, reinforcement)
+            bpy.data.objects.remove(reinforcement, do_unlink=True)
+        half.location.y += PERFUME_SHIFT_Y
         halves.append(half)
     bpy.data.objects.remove(outer, do_unlink=True)
     return halves
@@ -386,7 +423,8 @@ def build():
     print("PRODUCTION VERIFIED", tuple(round(d, 4) for d in result.dimensions),
           "volume mm3", round(volume, 2), "triangles", len(result.data.polygons))
     print("PERFUME THUMB CHANNEL", PERFUME_THUMB_WIDTH, "mm clear through floor; end seats Y",
-          PERFUME_CHANNEL_BASE, "front top Y", PERFUME_FRONT_TOP)
+          PERFUME_CHANNEL_BASE+PERFUME_SHIFT_Y, "front top Y", PERFUME_FRONT_TOP+PERFUME_SHIFT_Y,
+          "side top Y", PERFUME_SIDE_TOP+PERFUME_SHIFT_Y)
 
 
 if __name__ == "__main__":
