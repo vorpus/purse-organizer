@@ -12,7 +12,8 @@ physical retention remains untested.
 Latest physical feedback: perfume retention was insufficient and its rear
 connection fractured during support removal. The new revision moves it down
 1 mm, adds 1 mm front height relative to the pocket and 1 mm outward depth,
-and adds thicker square roots, local backing landings, and rounded gussets.
+and extends the tray floor straight into the backing at full thickness.
+The added side roots, landing pads, and gussets were rejected and removed.
 The earlier 2 mm downward move remains cancelled; this is a new 1 mm request.
 See [production notes](PRODUCTION.md) and the production build commands in
 the README. The earlier sections below record the initial scan handoff.

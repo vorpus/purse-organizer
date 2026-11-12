@@ -126,38 +126,6 @@ def build_frame():
     return [perimeter, make_backing()]
 
 
-def root_fillet(name, x, direction, base):
-    radius = 3.0
-    profile = [(x, base), (x+direction*radius, base)]
-    for i in range(1, 33):
-        angle = i*math.pi/64
-        profile.append((x+direction*radius*(1-math.sin(angle)),
-                        base+radius*(1-math.cos(angle))))
-    rings = [[(px, y, z) for px, z in profile] for y in (22.2, PERFUME_SIDE_TOP)]
-    faces = [rings[0], rings[1]]
-    for i in range(len(profile)):
-        j = (i+1) % len(profile)
-        faces.append((rings[0][i], rings[0][j], rings[1][j], rings[1][i]))
-    return frame_v2.make_mesh(name, faces)
-
-
-def reinforced_root(side):
-    # 3 mm square root on a 3 mm-thick local landing, not a thin rear neck.
-    # The inner R3 fillet fits behind the item: at Z1.5 its reach is 0.402 mm,
-    # less than the 0.6 mm lateral case clearance. Rear plane remains Z0.
-    if side == "left":
-        low, high, pad_low, pad_high = -67, -64, -70, -64
-        outer_x, outer_direction, inner_x, inner_direction = -67, -1, -64, 1
-    else:
-        low, high, pad_low, pad_high = 3.6, 6.6, 3.6, 9.6
-        outer_x, outer_direction, inner_x, inner_direction = 6.6, 1, 3.6, -1
-    return [box(side+" 3mm anchor landing", (pad_low, 22.2, 0),
-                (pad_high, PERFUME_SIDE_TOP, 3), .4),
-            box(side+" square end root", (low, 22.2, 0), (high, PERFUME_SIDE_TOP, 6)),
-            root_fillet(side+" outer R3 root gusset", outer_x, outer_direction, 3),
-            root_fillet(side+" inner R3 root gusset", inner_x, inner_direction, 0)]
-
-
 def perfume_capsule_halves():
     def rim_height(z):
         t = max(0, min((z-15.4)/4, 1))
@@ -166,23 +134,22 @@ def perfume_capsule_halves():
     rings = []
     for i in range(65):
         z = 21*i/64
-        if z < 4.2:
-            ymin = 26.4-4.2*math.sqrt(max(0, 1-((z-4.2)/4.2)**2))
-        elif z > 16.4:
+        # Keep the floor underside straight through to the rear plane.
+        # It meets the backing at full 1.2 mm thickness, without a rear curl.
+        if z > 16.4:
             ymin = 26.4-4.2*math.sqrt(max(0, 1-((z-16.4)/4.6)**2))
         else:
             ymin = 22.2
         radius = (PERFUME_APRON_TOP-ymin)/2-.01
-        # Retain the front/rear pill silhouette while providing enough exterior
-        # material around the conservative square-ended item cavity. This only
-        # thickens the two lower end corners; the inner fit stays unchanged.
-        face_blend = max(0, 1-z/1.2, (z-19.4)/1.6)
+        # Round only the front silhouette. The rear bottom corners retain R3
+        # through the full floor depth, avoiding a taper at the backing joint.
+        face_blend = max(0, (z-19.4)/1.6)
         bottom_radius = 3+(radius-3)*face_blend
         outline = []
-        corners = ((6.6-radius, PERFUME_APRON_TOP-radius, radius),
-                   (-67+radius, PERFUME_APRON_TOP-radius, radius),
-                   (-67+bottom_radius, ymin+bottom_radius, bottom_radius),
-                   (6.6-bottom_radius, ymin+bottom_radius, bottom_radius))
+        corners = ((5.6-radius, PERFUME_APRON_TOP-radius, radius),
+                   (-66+radius, PERFUME_APRON_TOP-radius, radius),
+                   (-66+bottom_radius, ymin+bottom_radius, bottom_radius),
+                   (5.6-bottom_radius, ymin+bottom_radius, bottom_radius))
         for corner, (cx, cy, r) in enumerate(corners):
             for step in range(33):
                 a = (corner+step/32)*math.pi/2
@@ -244,7 +211,7 @@ def perfume_capsule_halves():
         bm.from_mesh(half.data)
         weights = bm.edges.layers.float.new("bevel_weight_edge")
         for edge in bm.edges:
-            if edge.is_manifold and (all(abs(v.co.x-cut_x) < 1e-4 for v in edge.verts) or
+            if edge.is_manifold and all(v.co.z > BACK_THICKNESS for v in edge.verts) and (all(abs(v.co.x-cut_x) < 1e-4 for v in edge.verts) or
                                      all(abs(v.co.y-rim_height(v.co.z)) < 1e-4 for v in edge.verts)):
                 if edge.calc_face_angle() > .15:
                     edge[weights] = 1
@@ -256,9 +223,6 @@ def perfume_capsule_halves():
         bevel.width = .35
         bevel.segments = 4
         bpy.ops.object.modifier_apply(modifier=bevel.name)
-        for reinforcement in reinforced_root("left" if "left" in name else "right"):
-            boolean(half, reinforcement)
-            bpy.data.objects.remove(reinforcement, do_unlink=True)
         half.location.y += PERFUME_SHIFT_Y
         halves.append(half)
     bpy.data.objects.remove(outer, do_unlink=True)

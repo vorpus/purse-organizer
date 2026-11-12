@@ -3,7 +3,8 @@
 The user reported a good fit from the shared-base V2 print and approved the
 fitted-pocket concept. This model develops those pockets around the tested
 frame. The subsequent print exposed insufficient perfume retention and weak
-rear attachments during support removal. This revision reinforces those roots;
+rear attachments during support removal. This revision removes the floor's
+rear taper so it meets the backing at full thickness;
 its retention and support-removal strength still need physical confirmation.
 
 ## Geometry and access
@@ -22,15 +23,15 @@ its retention and support-removal strength still need physical confirmation.
   exposed reverse return or a separate projecting end plate.
   Rear panels that mirrored the front retainers are removed, together with
   the matching backing area. The purse lining supports the item from behind;
-  reinforced end connections keep the cradles attached to the frame.
+  the floor's continuous rear connection keeps the cradles attached.
   Rear-opening corners have a 7 mm radius. Following print feedback, the
   pocket and item reference move down 1 mm. The front wall gains 1 mm of
   height relative to the pocket floor: its global top stays Y33.7, while
   the side rim is now Y35.7. Cavity and outer depth both increase 1 mm;
   the inner front is Z19.4 and the outer front reaches Z21.
-  Each end has a 3 mm-wide square root extending 6 mm forward, a local
-  6 x 14.5 x 3 mm landing, and R3 reinforcing fillets on both sides. The
-  back remains flat at Z0. These replace the narrow tapered rear connection.
+  The 1.2 mm tray floor extends straight into the backing at Z0, with no
+  rear underside taper or narrowing of the floor near the backing. The added
+  side roots, landing pads, and gussets were removed at the user's request.
 - The thick junction fill and duplicate outer guide walls are removed. Outer
   sides use the fitted 2.4 mm frame wall alone. Both outer walls and the center
   divider use the same depth taper from Y-5 to Y17. The lower seating contour
@@ -51,7 +52,7 @@ its retention and support-removal strength still need physical confirmation.
 
 Overall dimensions are approximately 180 x 98.47 x 21 mm. Edge rounding slightly
 relieves the earlier frame height. The solid mesh volume is approximately
-25.37 cubic centimeters; actual filament use also depends on slicing and support.
+24.55 cubic centimeters; actual filament use also depends on slicing and support.
 
 ## Editing and rebuilding
 
@@ -93,9 +94,10 @@ An independent solid intersection probe also verifies that the 25 mm central
 perfume opening contains no shelf or retaining material above the backing.
 Another probe confirms the mirrored rear perfume panels are absent through
 both the shell and backing.
-Each reinforced attachment was probed independently: fully solid root cores
-of at least 2.8 x 13.7 x 5.8 mm and landing cores of 5.4 x 13.7 x 2.5 mm
-remain after the union. This verifies geometry, not fracture strength.
+The floor-to-backing connection is checked for continuous solid material,
+not merely touching edges. This verifies geometry, not fracture strength.
+Each half contains a solid 20 x 1.18 x 16.38 mm floor probe, including
+20 x 1.18 x 1.18 mm of overlap with the backing.
 
 ## Printing
 
@@ -116,11 +118,11 @@ The headless Cura result is a geometry and support preview, not supplied
 printer-ready G-code. Import the STL into Cura with the printer's profile and
 review its preview before saving the printer file.
 
-The final preview estimates 3 h 12 min / 34.1 g PLA,
+The final preview has 105 layers and estimates 3 h 7 min / 33.5 g PLA,
 including 2.6 g support, all beneath the perfume. The deposited skirt and part
 fit inside the 220 mm
 bed. Estimates assume PLA density 1.24 g/cm3. Verified STL SHA-256:
-`2E11604B4771A060E462AB273193100634A6427C08AEB790AABE1A74D1145D6F`.
+`D18D385AFE2664F09A8E30F066C40B052D8D38435157939B2FD2759D0A4E60D3`.
 
 Inspect the perfume scoop and mouth edges after support removal. Confirm that
 the perfume slides out as a complete case, the battery exits independently,

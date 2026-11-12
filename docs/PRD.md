@@ -76,6 +76,7 @@ same size and keeping the compartment at its existing position. The proposed
 Latest print feedback: perfume retention is insufficient and the cradle can
 break off while removing supports. Revise the pocket down 1 mm, raise its
 front wall 1 mm relative to the pocket, and extend its depth outward 1 mm.
-Replace thin tapered rear attachments with thicker right-angle roots and
-smooth reinforcing transitions on both sides. Preserve the open rear and
-center thumb gap; recheck battery clearance and support access.
+Keep the tray floor at full thickness all the way into the backing, without
+the rear underside taper. The user rejected added side roots, landing pads,
+and gussets; remove them. Preserve the open rear and center thumb gap;
+recheck battery clearance and support access.
